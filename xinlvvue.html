@@ -1,0 +1,1207 @@
+<template>
+	<div class="hr-con">
+        <div class="div-title">
+            <div class="div-title-text">
+                <span>心率</span>
+            </div>
+            <div class="div-title-icon" @click="showExplain"><img class="icon-img-show" src="../../css/img/icon_i@2x.png"/></div>
+            <div class="clear"></div>
+        </div>
+        <div v-show="xinLvShow" class="div-con">
+            <div class="xl-con" style="width:220px;height:220px;margin:0 auto;position:relative">
+                <canvas id="can-xl" width="420" height="420" style="width:100%;height:100%"></canvas>
+                <canvas @click="hengshow" id="can-xl-ani" width="420" height="420" style="width:100%;height:100%;position:absolute;top:0;left:0;"></canvas>
+            </div>
+            <div class="tab-con">
+                <div class="buttons-row">
+			        <a class="tab-link button xl-same" :class="{'active': tabIndex==0}" @click="tabIndexHandler('0')">本次</a>
+			        <a class="tab-link button xl-same" :class="{'active': tabIndex==1}" @click="tabIndexHandler('1')">近期</a>
+			        <a class="tab-link button xl-same" :class="{'active': tabIndex==2}" @click="tabIndexHandler('2')">同龄</a>
+			    </div>
+			    <div class="tabs">
+				    <div class="tab active">
+
+				        <template v-for="(item, index) in sub">
+				            <transition name="subFade">
+						        <div v-show="subIsShow[index]" class="sub" @click="subHandler(index)">
+		                            <div class="sub-title-jx sub-title" :style="{'background': subIndex == index&&item.seconds != 0?'#'+item.color:'', 'color': subIndex == index&&item.seconds != 0?'#fff':'', 'border-color':'#'+item.color}">
+		                                {{item.title}}
+		                            </div>
+                                    <div class="sub-div">
+                                        <div class="bar-con">
+	                                        <div class="bc-jx-bar-bc" :class="'bc-bar_' + index" v-bind:style="{'background':'#'+item.color}">
+	                                            <span class="bc-time">{{timeHandler(item.seconds)}}</span>
+	                                            <template v-if="item.near_list < item.seconds && tabIndex == 1">
+                                                    <div class="bar-less" v-bind:style="{'background':'#'+item.color}" :class="'bc-bar-long_' + index"></div>
+	                                            </template>
+	                                             <template v-if="item.age_list < item.seconds && tabIndex == 2">
+                                                    <div class="bar-less" v-bind:style="{'background':'#'+item.color}" :class="'agelist_bc-bar-long_' + index"></div>
+	                                            </template>
+	                                        </div>
+	                                        <template v-if="tabIndex == 0">
+                                                <span class="other-time"></span>
+	                                        </template>
+	                                        <template v-if="tabIndex == 1">
+	                                            <template v-if="item.near_list > item.seconds">
+                                                    <div class="jq-jx-bar-con">
+				                                        <div class="jq-jx-bar" :class="'jq-bar_'+index"></div>
+				                                        <span class="other-time">{{timeHandler(item.near_list)}}</span>
+				                                    </div>
+	                                            </template>
+	                                            <template v-if="item.near_list <= item.seconds">
+			                                        <span class="other-time">{{timeHandler(item.near_list)}}</span>
+	                                            </template>
+	                                        </template>
+	                                        <template v-if="tabIndex == 2">
+                                                <template v-if="item.age_list > item.seconds">
+                                                    <div class="jq-jx-bar-con">
+				                                        <div class="jq-jx-bar" :class="'tl-bar_'+index"></div>
+				                                        <span class="other-time">{{timeHandler(item.age_list)}}</span>
+				                                    </div>
+	                                            </template>
+	                                            <template v-if="item.age_list <= item.seconds">
+			                                        <span class="other-time">{{timeHandler(item.age_list)}}</span>
+	                                            </template>
+	                                        </template>
+	                                        
+	                                    </div>    
+                                    </div>
+		                            <div class="clear"></div>
+						        </div>
+						    </transition>    
+				        </template>
+
+				    </div>
+				</div>    
+            </div>
+            <div class="xl-point-con">
+                <div class="xl-point-div">
+                    <div class="sd-div" style="width:300px;height:155px;" @click="hengshow">
+				        <canvas id="can-point" width="600" height="310" style="width:100%;height100%"></canvas>
+				        <canvas id="can-sd" width="600" height="310" style="width:100%;height100%"></canvas>
+				    </div>
+                </div>
+                <div class="xl-point-text">
+                    <div class="xl-point-text-con">
+                        <div class="xl-persent">{{Math.floor((hr_distribution.ratio?hr_distribution.ratio:0)*100)}}%</div>
+                        <div class="">
+                            心率集中于<span class="xl-focus">{{hr_distribution.min_ratio_hr?hr_distribution.min_ratio_hr:0}}~{{hr_distribution.max_ratio_hr?hr_distribution.max_ratio_hr:0}}</span>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="xl-cs">
+                    <div>
+                        <div class="xl-cs-num">{{Math.floor(hr_distribution.mean?hr_distribution.mean:0)}}</div>
+                        <div class="xl-cs-text">{{hr_distribution.str_mean?hr_distribution.str_mean:"期望"}}</div>
+                    </div>
+                    <div>
+                        <div class="xl-cs-num">{{Math.floor(hr_distribution.sigma?hr_distribution.sigma:0)}}</div>
+                        <div class="xl-cs-text">{{hr_distribution.str_sigma?hr_distribution.str_sigma:"标准差"}}</div>
+                    </div>
+                    <div>
+                        <div class="xl-cs-num">{{Math.floor(hr_distribution.rr2*100?hr_distribution.rr2*100:0)}}%</div>
+                        <div class="xl-cs-text">{{hr_distribution.str_rr2?hr_distribution.str_rr2:"拟合度"}}</div>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+        <template v-if="!xinLvShow">
+            <div>
+                <img @load="imageLoaded" width="100%" src="../../css/img/mbbg.jpg"/>
+            </div>
+        </template>
+	</div>
+</template>
+
+<script>
+	export default {
+		name:"el-hr",
+		props:["hr_pie", "near_list", "age_list", "hr_count_list", "hr_real_count_list", "hr_distribution", "isTableOn"],
+		data: function() {
+			return {
+				tabIndex:0,
+				subIndex:null,
+				isNone:true,
+				xinLvShow:false,
+				sub:[],
+				maxValue:0,
+				subIsShow:[
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+				]
+			}
+		},
+		created: function() {
+		},
+		mounted:function(){
+		},
+		methods:{
+			showExplain: function(){
+				this.$emit("explain","xinLv")
+			},
+			hengshow: function(){
+				this.$emit("heng","xl")
+			},
+			tabIndexHandler: function(index){
+				var that = this;
+                that.tabIndex = index;
+                that.subIsShow = [];
+                if(index == 0){
+                	that.sub.forEach(function(item,index){
+                		if(item.seconds){
+                            that.subIsShow.push(true);
+                		}
+                		else{
+                			that.subIsShow.push(false);
+                		}
+                	})
+                }
+                if(index == 1){
+                	that.sub.forEach(function(item,index){
+                		if(item.near_list){
+                            that.subIsShow.push(true);
+                		}
+                		else{
+                			if(item.seconds){
+                				that.subIsShow.push(true);
+                			}
+                			else{
+                				that.subIsShow.push(false);
+                			}
+                		}
+                	})
+                }
+                if(index == 2){
+                	that.sub.forEach(function(item,index){
+                		if(item.age_list){
+                            that.subIsShow.push(true);
+                		}
+                		else{
+                			if(item.seconds){
+                				that.subIsShow.push(true);
+                			}
+                			else{
+                				that.subIsShow.push(false);
+                			}
+                		}
+                	})
+                }
+			},
+			subHandler: function(index){
+				if(this.subIndex != index){
+					this.subIndex = index;
+            	    this.will(index);
+				}
+            },
+            timeHandler: function(sec){
+            	if(sec > 3600){
+            		var hour = Math.floor(sec/60/60)<10?"0"+Math.floor(sec/60/60):Math.floor(sec/60/60);
+            		var minute = Math.floor(sec/60%60)<10?"0"+Math.floor(sec%60/60):Math.floor(sec/60%60);
+            		var second = Math.floor(sec%60)<10?"0"+Math.floor(sec%60):Math.floor(sec%60);
+            		return hour + ":" + minute + ":" + second;
+            	}
+            	else{
+            		return (Math.floor(sec/60)<10?"0"+Math.floor(sec/60):Math.floor(sec/60)) + ":" + (sec%60<10?"0"+sec%60:sec%60)
+            	}
+            },
+            imageLoaded:function(){
+            	var $$ = Dom7;
+		        $$(window).trigger('resize');
+            },
+            //心率
+            will:function(subIndex){
+				//比例两倍
+				var scale = 2
+            	var that = this;
+            	var tempSub = [];
+            	var count = 0;
+            	that.sub = [];
+            	that.hr_pie.forEach(function(item, index){
+                	item.near_list = that.near_list[index];
+            		item.age_list = that.age_list[index];
+            		tempSub.push(item);
+                })
+                tempSub.forEach(function(item, index){
+                	if(!item.age_list && !item.near_list && !item.seconds && count == 0){
+                		count++;
+                	}
+                	else{
+                		item.near_list = that.near_list[index];
+                		item.age_list = that.age_list[index];
+                		that.sub.push(item);
+                	}
+                })
+                //css bar width
+				var style = document.createElement("style");
+				document.head.appendChild(style);
+				var sheet = style.sheet;
+				var token = window.WebKitCSSKeyframesRule?"-webkit-":"";
+                //取value最大值，最大value即为100%；
+                var maxValue = 0;
+				that.sub.forEach(function(item, index){
+                    if(maxValue < item.seconds){
+                    	maxValue = item.seconds;
+                    }
+                    if(maxValue < item.near_list){
+                    	maxValue = item.near_list;
+                    }
+                    if(maxValue < item.age_list){
+                    	maxValue = item.age_list;
+                    }
+				})
+				that.maxValue = maxValue;
+
+				//计算bar的长度
+				var barLong = (window.innerWidth - 15*2)*0.77;
+				var lessMax;
+				var barOccupy = (barLong - 50)/barLong;
+
+                //插入样式
+				that.sub.forEach(function(item, index){
+					sheet.insertRule("@"+token+"keyframes bcmove_"+index+" {0%{width:0%} 100%{width:"+item.seconds/maxValue*100*barOccupy+"%}}",0);
+					sheet.insertRule("@"+token+"keyframes jqmove_"+index+" {0%{width:0%} 100%{width:"+item.near_list/maxValue*100*barOccupy+"%}}",0);
+					sheet.insertRule("@"+token+"keyframes tlmove_"+index+" {0%{width:0%} 100%{width:"+item.age_list/maxValue*100*barOccupy+"%}}",0);
+                    
+                    //计算长条可用最长距离占比,60为左边时间所占长度
+					var maxVal = ((item.seconds/maxValue)*barOccupy*barLong - 60)/((item.seconds/maxValue)*barOccupy*barLong);
+					if(item.near_list <= item.seconds){
+						var lessWidth = (item.seconds - item.near_list)/(item.seconds)*barOccupy*100;
+						//计算阴影长条所占比例
+						lessMax = maxVal*(1 - item.near_list/(item.seconds));
+
+						lessWidth = lessWidth > lessMax?lessMax:lessWidth;
+						sheet.insertRule("@"+token+"keyframes bclongmove_"+index+" {0%{width:0%} 100%{width:"+lessWidth*100+"%}}",0);
+					}
+					if(item.age_list <= item.seconds){
+						var lessWidth = (item.seconds - item.age_list)/(item.seconds)*barOccupy*100;
+						//计算阴影长条所占比例
+                        lessMax = maxVal*(1 - item.age_list/(item.seconds));
+
+						lessWidth = lessWidth > lessMax?lessMax:lessWidth;
+						sheet.insertRule("@"+token+"keyframes agebclongmove_"+index+" {0%{width:0%} 100%{width:"+lessWidth*100+"%}}",0);
+					}
+				})
+                
+                if(subIndex != undefined){
+	                if(!that.sub[subIndex].seconds) return;
+                }
+            	var canvas = document.getElementById("can-xl");  
+				var ctx = canvas.getContext("2d");
+				var canvasAni = document.getElementById("can-xl-ani");
+				var ctxAni = canvasAni.getContext("2d");
+			    var circle ={  
+				    x : canvas.width/2,  
+				    y : canvas.height/2,  
+				    radius : 110*scale 
+				};
+				//圆弧间隙弧度值
+				var CIR_WIDTH = 0.005;
+				//画之前，清空画布
+				ctx.clearRect(0, 0, canvas.width, canvas.height)
+				var TICK_WIDTH = 37*scale;
+				var color = {
+					jx: "#"+that.sub[0].color,
+					zs: "#"+that.sub[1].color,
+					nj: "#"+that.sub[2].color,
+					rz: "#"+that.sub[3].color,
+					rs: "#"+that.sub[4].color,
+					sh: "#"+that.sub[5].color,
+				}
+				//指定类型时
+			    var indexTemp = [];	
+			    //转化索引未key
+			    var indexChange = ["jx","zs","nj","rz","rs","sh"];
+			    var secondsData = {
+			    	jx: that.sub[0].seconds,
+					zs: that.sub[1].seconds,
+					nj: that.sub[2].seconds,
+					rz: that.sub[3].seconds,
+					rs: that.sub[4].seconds,
+					sh: that.sub[5].seconds,
+			    };
+			    var valueData = {
+			    	jx: that.sub[0].value,
+					zs: that.sub[1].value,
+					nj: that.sub[2].value,
+					rz: that.sub[3].value,
+					rs: that.sub[4].value,
+					sh: (1000- Math.floor(that.sub[0].value*1000) - Math.floor(that.sub[1].value*1000) - Math.floor(that.sub[2].value*1000) - Math.floor(that.sub[3].value*1000) - Math.floor(that.sub[4].value*1000))/1000,
+			    };
+			    if(that.sub[6]){
+					color["yj"] = "#"+that.sub[6].color;
+					indexChange.push("yj");
+					secondsData = {
+						jx: that.sub[0].seconds,
+						zs: that.sub[1].seconds,
+						nj: that.sub[2].seconds,
+						rz: that.sub[3].seconds,
+						rs: that.sub[4].seconds,
+						sh: that.sub[5].seconds,
+						yj: that.sub[6].seconds,
+					};
+					valueData = {
+						jx: that.sub[0].value,
+						zs: that.sub[1].value,
+						nj: that.sub[2].value,
+						rz: that.sub[3].value,
+						rs: that.sub[4].value,
+						sh: that.sub[5].value,
+						//为凑100%
+						yj: (1000- Math.floor(that.sub[0].value*1000) - Math.floor(that.sub[1].value*1000) - Math.floor(that.sub[2].value*1000) - Math.floor(that.sub[3].value*1000) - Math.floor(that.sub[4].value*1000) - Math.floor(that.sub[5].value*1000))/1000,
+					}
+				}
+				drawTicks.call(that,{
+					pattern:secondsData,
+					value:valueData,
+					index: indexChange[subIndex]?indexChange[subIndex]:""
+				});
+
+				function drawTicks(data){  
+					ctx.save();              
+			        ctx.lineWidth = TICK_WIDTH;
+			        //数据总数
+			        var dataAll = function(pattern){
+			        	var temp = 0;
+			        	for(var key in pattern){
+			                temp += pattern[key]
+			        	}
+			            return temp
+			        }(data.pattern);
+
+			        //起始位置
+			        var beginPoint = 1.5*Math.PI,
+			            endPoint;
+			        
+			        var valid=0;
+			        for(var key in data.pattern){
+			        	if(data.pattern[key]){
+			        		valid += 1
+			        	}
+			        }
+			        if(valid == 1) valid=0
+			        for(var key in data.pattern){
+			        	if(data.index == key && data.pattern[key]){
+			        		//绘弧
+				        	endPoint = drawArc(beginPoint, data.pattern[key]/dataAll*(1-CIR_WIDTH*valid), color[key],true, data.value[key]);
+					        //间隔
+					        if(valid){
+					        	beginPoint = spaceHandler(endPoint);
+					        }
+			        	}
+			        	else if(data.pattern[key]){
+			        		//绘弧
+				        	endPoint = drawArc(beginPoint, data.pattern[key]/dataAll*(1-CIR_WIDTH*valid), color[key],false, data.value[key]);
+					        //间隔
+					        if(valid){
+					        	beginPoint = spaceHandler(endPoint);
+					        }
+			        	}
+			        	if(data.index.length){
+			        		//重汇
+					        ctx.beginPath();
+				            ctx.strokeStyle = color[data.index];
+				            ctx.lineWidth = (37+10)*scale;
+				            ctx.arc(circle.x, circle.y, circle.radius-ctx.lineWidth + 10*scale, indexTemp[0]-CIR_WIDTH*360/180*Math.PI, indexTemp[1] + CIR_WIDTH*360/180*Math.PI, false)
+				            ctx.stroke();            
+				            ctx.save();
+                            var index = this.subIndex;
+				            arcValue(indexTemp[0],indexTemp[2],true, data.value[(data.index)])
+			        	}
+			    	}
+			        //中心圆
+			        //显示YLZ
+					drawXLZ()
+					//中心圆
+					function drawCenter(){
+						ctx.beginPath();
+						ctx.arc(circle.x, circle.y, 40, 0, 2*Math.PI, false);
+						ctx.strokeStyle = "#ccc"
+						ctx.stroke();
+					}
+					//显示YLZ
+				    function drawXLZ(){
+				    	if(subIndex == undefined) return
+				    	var level = {
+				    		jx: "极限",
+							zs: "增速",
+							nj: "耐久",
+							rz: "燃脂",
+							rs: "热身",
+							sh: "生活",
+							jy: "预警"
+				    	}
+				        ctx.save();
+				        ctx.textAlign = "center";  
+				        ctx.textBaseline = "middle";  
+				        ctx.font = "36px Helvetial"; 
+				        ctx.fillStyle = "#5C6273"; 
+				        ctx.beginPath();
+				        ctx.fillText(that.sub[subIndex].title, circle.x, circle.y-15);
+				        ctx.restore();
+
+				        ctx.beginPath();
+				        ctx.textAlign = "center";  
+				        ctx.textBaseline = "middle";  
+				        ctx.font = "24px Helvetial"; 
+				        ctx.fillStyle = "#5C6273"; 
+				        ctx.fillText(that.sub[subIndex].sections.replace(/[\u4E00-\u9FA5]/g,""), circle.x, circle.y+10*scale);
+				        ctx.fillText("bpm", circle.x, circle.y+25*scale);
+				        ctx.restore();
+				    }
+			        //画圆弧
+			        function drawArc(begin, percent, color, isIndex, newPercent){
+			        	var end = begin + percent*360/180*Math.PI;
+			        	if(isIndex){
+			        		indexTemp.push(begin);
+			        		indexTemp.push(end);
+			        		indexTemp.push(percent);
+			        	}
+			        	else{
+			        		ctx.beginPath();
+				        	ctx.lineWidth = 37*scale;
+				            ctx.strokeStyle = color;
+				            ctx.arc(circle.x, circle.y, circle.radius-ctx.lineWidth, begin, end, false);
+				            ctx.stroke();            
+				            ctx.save();
+				            arcValue(begin, percent,false, newPercent);
+			        	}
+			            return end;
+			        }
+				    //间隔线
+				    function spaceHandler(begin){
+				    	var end = begin + CIR_WIDTH*360/180*Math.PI;
+				    	ctx.beginPath();
+			            ctx.strokeStyle = "#0D0E10";
+			            ctx.arc(circle.x, circle.y, circle.radius-ctx.lineWidth, begin, end, false);
+			            ctx.stroke();            
+			            ctx.save();
+			            return end;
+				    }
+				    //圆弧数值
+				    function arcValue(begin, percent, isIndex, newPercent){
+				    	//比例低于5%，则不显示
+				    	if(newPercent < 0.05 && !isIndex) return
+			            ctx.beginPath();
+				        ctx.textAlign = "center";  
+				        ctx.textBaseline = "middle";  
+				        ctx.font = "24px Helvetial"; 
+				        ctx.fillStyle = "#fff"
+				        var percentValue = Math.floor(newPercent*1000)/10+ "%";
+				        var textX = function textPosition(degree, circle, isIndex){
+				        	var tempX, tempY;
+				        	var width;
+				        	if(isIndex) {
+				        		width = ctx.lineWidth - 10
+				        	}
+				        	else{
+				        		width = ctx.lineWidth
+				        	}
+				        	//大于一圈
+				        	if(degree > 2*Math.PI){
+				        		degree = degree - 2*Math.PI;
+				        	}
+				        	//0-90角度计算，并以此类推
+				        	if(degree <= 1.57){
+			                    tempX = circle.x + (circle.radius - width)*Math.cos(degree*2*Math.PI/6.28);
+			                    tempY = circle.y + (circle.radius - width)*Math.sin(degree*2*Math.PI/6.28);
+				        	}
+				        	if(1.57 < degree && degree <= 3.14){
+			                    tempX = circle.x - (circle.radius - width)*Math.sin((degree-1.57)*2*Math.PI/6.28);
+			                    tempY = circle.y + (circle.radius - width)*Math.cos((degree-1.57)*2*Math.PI/6.28)
+				        	}
+				        	if(3.14 < degree && degree <= 4.71){
+				        		tempX = circle.x - (circle.radius - width)*Math.cos((degree-3.14)*2*Math.PI/6.28);
+			                    tempY = circle.y - (circle.radius - width)*Math.sin((degree-3.14)*2*Math.PI/6.28);
+				        	}
+				        	if(4.71 < degree && degree <= 6.28){
+				        		tempX = circle.x + (circle.radius - width)*Math.sin((degree-4.71)*2*Math.PI/6.28);
+			                    tempY = circle.y - (circle.radius - width)*Math.cos((degree-4.71)*2*Math.PI/6.28)
+				        	}
+				        	return [tempX, tempY];
+				        }(begin + percent*360/180*Math.PI/2, circle, isIndex)
+				        ctx.fillText(percentValue, textX[0], textX[1]);
+				        ctx.restore();
+				    }
+				}
+				if(subIndex == undefined){
+					drawAni()
+				}
+				function drawAni(){
+					var radian = 0;
+					ctxAni.fillStyle = "#0D0E10";
+					ctxAni.globalCompositeOperation = "source-over";
+					ctxAni.fillRect(0, 0, canvasAni.width, canvasAni.height);
+                    ctxAni.globalCompositeOperation = "destination-out";
+					var timer = setInterval(function(){
+						if(radian <= 1.5*Math.PI){
+							ctxAni.beginPath();
+							ctxAni.lineWidth = (37+58)*scale;
+		                    ctxAni.arc(circle.x, circle.y, circle.radius - ctxAni.lineWidth + 33*scale, -0.5*Math.PI, radian);
+		                    ctxAni.stroke();
+		                    ctxAni.closePath();
+		                    radian += 0.1*Math.PI;
+						}
+						else
+						{
+                            clearInterval(timer)
+						}
+					},50)
+				} 
+            },
+            //心率-点阵
+            ratePoint:function(){
+            	//比例两倍
+	        	var scale = 2
+            	var that = this;
+                var canvas = document.getElementById("can-point");
+		        var sdcanvas = document.getElementById("can-sd");
+		        //控制容器及sd样式
+		        var div = document.getElementsByClassName("sd-div");
+		        div[0].style.position = "relative";
+		        sdcanvas.style.opacity = "0.1";
+		        sdcanvas.style.position = "absolute";
+		        sdcanvas.style.top = "0";
+		        sdcanvas.style.left = "0";
+		        sdcanvas.style.zIndex = "9";
+
+		        canvas.style.position = "absolute";
+		        canvas.style.top = "0";
+		        canvas.style.left = "0";
+		        canvas.style.zIndex = "10";
+		        
+		        var ctx = canvas.getContext("2d");
+		        var sdctx = sdcanvas.getContext("2d");
+		        var width = canvas.width;
+		        var height = canvas.height;
+		        var stepMax=0;//最这组心率数据中最大的
+		        drawPoint();
+		        drawRate();
+		        drawNH();
+		        drawShadow();
+		        
+		        //画点
+		        function drawPoint(){
+		            //横轴
+		            var xSpace = Math.floor((width-2*30)/29);
+		            //纵轴
+		            var ySpace = Math.floor((height-2*16)/15);
+		            for(var i=0;i<width;i+=xSpace){
+		                for(var j=0;j<height;j+=ySpace){
+		                    ctx.beginPath();
+		                    /*ctx.strokeStyle="#ccc"*/
+		                    ctx.arc(2+i,2+j,1,0,2*Math.PI);
+		                    ctx.stroke();
+		                }
+		            }
+		        }
+		        //画心率
+		        function drawRate(){
+		            // var test = [{"rate":50,"step":2},{"rate":60,"step":7},{"rate":70,"step":8},{"rate":80,"step":9},{"rate":90,"step":15},{"rate":100,"step":17},{"rate":110,"step":17},{"rate":120,"step":18},{"rate":130,"step":20},{"rate":140,"step":16},{"rate":150,"step":15},{"rate":160,"step":10},{"rate":170,"step":7},{"rate":190,"step":3},{"rate":200,"step":1}];
+		            var test = [];
+		            var maxX=0, minX=850;
+                    for(let hr of that.hr_real_count_list){
+                        maxX = maxX>hr.x?maxX:hr.x;
+                        minX = minX<hr.x?minX:hr.x;
+                    }
+                    //矫正比例
+                    var sign = (maxX-minX)/150;
+		            for(let hr of that.hr_real_count_list){
+		            	test.push({
+		            		"rate": hr.x*scale/sign-(minX*scale/sign-50),
+		            		"step": hr.y
+		            	})
+		            }
+		            for(let item of test){
+		                stepMax = item.step>stepMax?item.step:stepMax;
+		            }
+		            //横轴取50-200，与图比例150/300=0.5
+		            //纵轴取最大值，与图比例？/stepMax*200
+		            var tempColor = [];
+		            var minValue = 1
+		            that.hr_pie.forEach(function(item, index){
+		            	if(item.seconds){
+		            		if(minValue > item.value){
+		            			minValue = item.value;
+		            		}
+		            		tempColor.push(item)
+		            	}
+		            })
+		            tempColor.reverse();
+		            //线段范围
+		            var rateMin = test[0].rate;
+		            var last = test.length - 1;
+		            var rateMax = test[last].rate;
+
+		            var canvasGra = ctx.createLinearGradient(0, 0, width, 0);
+		            var valueTemp = 0;
+		            //颜色开始
+		            canvasGra.addColorStop(0, "#" + tempColor[0].color);
+		            for(var i=0; i < tempColor.length-1; i++){
+			            valueTemp = valueTemp + tempColor[i].value - minValue/2
+		            	canvasGra.addColorStop(valueTemp<0?0:valueTemp, "#" + tempColor[i].color);
+
+		            	valueTemp = valueTemp + minValue/2*2;
+		            	canvasGra.addColorStop(valueTemp<0?0:valueTemp, "#" + tempColor[i].color);
+		            	//向左偏移0.05
+		            	valueTemp = valueTemp - minValue/2 - 0.05;
+		            }
+
+		            canvasGra.addColorStop(1, "#" + tempColor[i].color)
+
+		            ctx.beginPath()
+		            var prev = test[0]
+		            for(var i=0;i<test.length-1;i++){
+		                var nextIndex = i + 1;
+		                ctx.moveTo((prev.rate-50)*2, height-prev.step/stepMax*height);
+		                ctx.lineTo((test[nextIndex].rate-50)*2, height-test[nextIndex].step/stepMax*height);
+		                prev = test[nextIndex];
+		                
+		            }
+		            ctx.lineWidth = 4;
+		            ctx.lineCap = "round";
+		            ctx.strokeStyle = canvasGra;
+		            ctx.stroke();
+		            ctx.closePath();
+		        }
+		        //画拟合
+		        function drawNH(){
+		            // var test = [{"rate":50,"step":1},{"rate":60,"step":2},{"rate":70,"step":5},{"rate":80,"step":9},{"rate":90,"step":10},{"rate":100,"step":13},{"rate":110,"step":15},{"rate":120,"step":16},{"rate":130,"step":18},{"rate":140,"step":12},{"rate":150,"step":10},{"rate":160,"step":9},{"rate":170,"step":6},{"rate":190,"step":2},{"rate":200,"step":0}];
+                    var test = [];
+		            var maxX=0, minX=85*scale;
+                    for(let hr of that.hr_count_list){
+                        maxX = maxX>hr.x?maxX:hr.x;
+                        minX = minX<hr.x?minX:hr.x;
+                    }
+                    var sign = (maxX-minX)/150;
+		            for(let hrs of that.hr_count_list){
+		            	test.push({
+		            		"rate": hrs.x*scale/sign-(minX*scale/sign-50),
+		            		"step": hrs.y
+		            	})
+		            }
+		            //真实拟合
+		            ctx.beginPath();
+		            var prev = test[0];
+		            ctx.moveTo((prev.rate-50)*2, height-prev.step/stepMax*height);
+		            for(var i=0; i < test.length - 1; i++){
+		                var nextIndex = i + 1;
+		                ctx.lineTo((test[nextIndex].rate-50)*2, height-test[nextIndex].step/stepMax*height);
+		                prev = test[nextIndex];
+		            }
+		            ctx.lineWidth = 4;
+		            ctx.lineCap = "round";
+		            ctx.strokeStyle = "#f70c0b";
+		            ctx.stroke();
+		            ctx.closePath();
+		        }
+		        //画阴影
+		        function drawShadow(){
+		            // var test = [{"rate":50,"step":1},{"rate":60,"step":2},{"rate":70,"step":5},{"rate":80,"step":9},{"rate":90,"step":10},{"rate":100,"step":13},{"rate":110,"step":15},{"rate":120,"step":16},{"rate":130,"step":18},{"rate":140,"step":12},{"rate":150,"step":10},{"rate":160,"step":9},{"rate":170,"step":6},{"rate":190,"step":2},{"rate":200,"step":1}];
+		            var test = [];
+		            var maxX=0, minX=85*scale;
+
+                    for(let hr of that.hr_count_list){
+                        maxX = maxX>hr.x?maxX:hr.x;
+                        minX = minX<hr.x?minX:hr.x;
+                    }
+                    
+                    var sign = (maxX-minX)/150;
+
+		            for(let hrs of that.hr_count_list){
+		            	test.push({
+		            		"rate": hrs.x*scale/sign-(minX*scale/sign-50),
+		            		"step": hrs.y
+		            	})
+		            }
+
+		            var sd = {
+		                xMin: that.hr_distribution.min_ratio_hr*scale/sign - (minX*scale/sign-50),
+		                xMax: that.hr_distribution.max_ratio_hr*scale/sign - (minX*scale/sign-50)
+		            }
+
+		            //阴影拟合
+		            sdctx.beginPath()
+		            var prev = test[0];
+		            sdctx.moveTo((prev.rate-50)*2, height-prev.step/stepMax*height);
+		            for(var i=0;i<test.length-1;i++){
+		                var nextIndex = i + 1;
+		                sdctx.lineTo((test[nextIndex].rate-50)*2, height-test[nextIndex].step/stepMax*height);
+		                prev = test[nextIndex];
+		            }
+		            sdctx.lineTo((test[i].rate-50)*2, height);
+		            sdctx.lineTo(0, height);
+		            sdctx.lineTo(0, height-test[0].step/stepMax*height);
+		            sdctx.lineWidth = 0.1;
+		            sdctx.lineCap = "round";
+		            sdctx.strokeStyle = "#fff";
+		            sdctx.fillStyle="#5C6273";
+		            sdctx.fill();
+		            sdctx.stroke();
+		            sdctx.closePath();
+
+		            sdctx.beginPath();
+		            sdctx.moveTo(0, 0);
+		            sdctx.lineTo((sd.xMin-50)*2, 0);
+		            sdctx.lineTo((sd.xMin-50)*2, height);
+		            sdctx.lineTo(0, height);
+		            sdctx.lineTo(0, 0);
+		            sdctx.lineWidth = 0.01;
+		            sdctx.strokeStyle = "#fff";
+		            sdctx.fillStyle="#fff";
+		            sdctx.fill();
+		            sdctx.stroke();
+		            sdctx.closePath();
+
+		            sdctx.beginPath();
+		            sdctx.moveTo((sd.xMax-50)*2, 0);
+		            sdctx.lineTo(width, 0);
+		            sdctx.lineTo(width, height);
+		            sdctx.lineTo((sd.xMax-50)*2, height);
+		            sdctx.lineTo((sd.xMax-50)*2, 0);
+		            sdctx.lineWidth = 0.1;
+		            sdctx.strokeStyle = "#fff";
+		            sdctx.fillStyle="#fff";
+		            sdctx.fill();
+		            sdctx.stroke();
+		            sdctx.closePath();
+		        }
+            },
+		},
+		components:{},
+		watch:{
+			"hr_pie": function(){
+                this.will();
+                this.tabIndexHandler("0")
+			},
+			"hr_count_list": function(){
+				if(this.hr_count_list.length){
+					this.xinLvShow = true;
+					this.ratePoint();
+				}
+				else{
+                    this.xinLvShow = false;
+				}
+			},
+			"hr_distribution": function(){
+			},
+			"isTableOn": function(){
+				//tab进入新页面时，将重置心率的数据展示	
+			    if(this.isTableOn == 1){
+			    	this.subIndex = null	
+					this.will();
+			    }
+			}
+		}
+	}
+</script>
+<style scoped>
+
+.tab-con{
+	padding:15px;
+}
+.buttons-row{
+	border-radius:15px;
+	border:1px solid #191E28;
+	color:#B8BDCC;
+	height:30px;
+	line-height:30px;
+	padding:2px;
+	background:#191E28;
+}
+.xl-con{
+	text-align:center
+}
+.xl-same{
+	border:none ! important;
+	color:#B8BDCC;
+	height: 30px;
+	line-height: 30px;
+}
+a.active{
+	color:#5C6273;
+	background:#2E3543;
+	border-radius:15px !important
+}
+.sub{
+	margin-top:10px;
+	overflow:hidden
+}
+.tabs{
+	margin-top:5px;
+	color:#5C6273
+}
+.sub-title{
+	border-radius:15px;
+	float:left;
+	width:20%;
+	text-align:center;
+	height:25px;
+	line-height:25px;
+	border:1px solid;
+}
+.sub-div{
+	border-radius:15px;
+	background:#F0F2F7;
+	width:77%;
+	float:right;
+	height:27px;
+	line-height:27px;
+	color:#F0F2F7;
+	overflow:hidden;
+}
+.bar-con{
+	position:relative;
+	display:flex;
+	background:#2E3543;
+	z-index:9;
+}
+.bc-jx-bar-bc{
+	background:#B70C2A;
+	border-radius:15px;
+	min-width:57px;
+    z-index:9;
+}
+.bc-base{
+	border-radius:15px;
+	min-width:50px;
+}
+.bc-jx-bar{
+	min-width:50px;
+	background:#B70C2A;
+	border-radius:15px;
+	position:absolute;
+	top:0px;
+	left:0;
+	animation:move 3s;
+    animation-fill-mode: forwards;
+    z-index:9;
+}
+.bc-jx-bar-more{
+	border-top-left-radius:15px;
+	border-bottom-left-radius:15px;
+	position:absolute;
+	top:0;
+	left:0;
+	animation:move 3s;
+    animation-fill-mode: forwards;
+    z-index:9;
+}
+
+.bar-less{
+	background:#e7e9f1;
+	background-image: linear-gradient(45deg, 
+      rgba(92,98,115, 0.3) 25%, 
+      transparent 25%, 
+      transparent 50%, 
+      rgba(92,98,115, 0.3) 50%, 
+      rgba(92,98,115, 0.3) 75%, 
+      transparent 75%, 
+      transparent) ! important;
+    background-size: 8px 8px ! important; 
+    border-top-right-radius:15px;
+    border-bottom-right-radius:15px;
+    height:27px;
+    min-width:13px;
+    float:right;
+}
+
+.bc-bar_0{
+	animation:bcmove_0 3s;
+    animation-fill-mode: forwards;
+}
+.bc-bar_1{
+	animation:bcmove_1 3s;
+    animation-fill-mode: forwards;
+}
+.bc-bar_2{
+	animation:bcmove_2 3s;
+    animation-fill-mode: forwards;
+}
+.bc-bar_3{
+	animation:bcmove_3 3s;
+    animation-fill-mode: forwards;
+}
+.bc-bar_4{
+	animation:bcmove_4 3s;
+    animation-fill-mode: forwards;
+}
+.bc-bar_5{
+	animation:bcmove_5 3s;
+    animation-fill-mode: forwards;
+}
+.bc-bar_6{
+	animation:bcmove_6 3s;
+    animation-fill-mode: forwards;
+}
+
+.bc-bar-long_0{
+	animation:bclongmove_0 3s;
+    animation-fill-mode: forwards;
+}
+.bc-bar-long_1{
+	animation:bclongmove_1 3s;
+    animation-fill-mode: forwards;
+}
+.bc-bar-long_2{
+	animation:bclongmove_2 3s;
+    animation-fill-mode: forwards;
+}
+.bc-bar-long_3{
+	animation:bclongmove_3 3s;
+    animation-fill-mode: forwards;
+}
+.bc-bar-long_4{
+	animation:bclongmove_4 3s;
+    animation-fill-mode: forwards;
+}
+.bc-bar-long_5{
+	animation:bclongmove_5 3s;
+    animation-fill-mode: forwards;
+}
+.bc-bar-long_6{
+	animation:bclongmove_6 3s;
+    animation-fill-mode: forwards;
+}
+.agelist_bc-bar-long_1{
+	animation:agebclongmove_1 3s;
+    animation-fill-mode: forwards;
+}
+.agelist_bc-bar-long_2{
+	animation:agebclongmove_2 3s;
+    animation-fill-mode: forwards;
+}
+.agelist_bc-bar-long_3{
+	animation:agebclongmove_3 3s;
+    animation-fill-mode: forwards;
+}
+.agelist_bc-bar-long_4{
+	animation:agebclongmove_4 3s;
+    animation-fill-mode: forwards;
+}
+.agelist_bc-bar-long_5{
+	animation:agebclongmove_5 3s;
+    animation-fill-mode: forwards;
+}
+.agelist_bc-bar-long_6{
+	animation:agebclongmove_6 3s;
+    animation-fill-mode: forwards;
+}
+
+.jq-jx-bar-con{
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	background:#2E3543;
+	display: flex;
+}
+.jq-jx-bar{
+	min-width:60px;
+	width:0%;
+	background:#2E3543;
+	border-radius:15px;
+	z-index:8;
+	display:inline-block;
+    background-image: linear-gradient(45deg, 
+      rgba(92,98,115, 0.3) 25%, 
+      transparent 25%, 
+      transparent 50%, 
+      rgba(92,98,115, 0.3) 50%, 
+      rgba(92,98,115, 0.3) 75%, 
+      transparent 75%, 
+      transparent);
+    background-size: 8px 8px; 
+}
+.jq-jx-bar-more{
+	width:0%;
+	min-width:50px;
+	border-radius:15px;
+	z-index:8;
+	display:inline-block;
+    background-image: linear-gradient(45deg, 
+      rgba(92,98,115, 0.3) 25%, 
+      transparent 25%, 
+      transparent 50%, 
+      rgba(92,98,115, 0.3) 50%, 
+      rgba(92,98,115, 0.3) 75%, 
+      transparent 75%, 
+      transparent) ! important;
+    background-size: 8px 8px ! important; 
+}
+.jq-jx-bar-equal{
+	width:0%;
+	min-width:50px;
+	border-radius:15px;
+	z-index:8;
+	display:inline-block;
+    // background-image: linear-gradient(45deg, 
+    //   rgba(92,98,115, 0.3) 25%, 
+    //   transparent 25%, 
+    //   transparent 50%, 
+    //   rgba(92,98,115, 0.3) 50%, 
+    //   rgba(92,98,115, 0.3) 75%, 
+    //   transparent 75%, 
+    //   transparent) ! important;
+    // background-size: 8px 8px ! important; 
+}
+.jq-bar_0{
+	animation:jqmove_0 3s;
+    animation-fill-mode: forwards;
+}
+.jq-bar_1{
+	animation:jqmove_1 3s;
+    animation-fill-mode: forwards;
+}
+.jq-bar_2{
+	animation:jqmove_2 3s;
+    animation-fill-mode: forwards;
+}
+.jq-bar_3{
+	animation:jqmove_3 3s;
+    animation-fill-mode: forwards;
+}
+.jq-bar_4{
+	animation:jqmove_4 3s;
+    animation-fill-mode: forwards;
+}
+.jq-bar_5{
+	animation:jqmove_5 3s;
+    animation-fill-mode: forwards;
+}
+.jq-bar_6{
+	animation:jqmove_6 3s;
+    animation-fill-mode: forwards;
+}
+
+.tl-bar_0{
+	animation:tlmove_0 3s;
+    animation-fill-mode: forwards;
+}
+.tl-bar_1{
+	animation:tlmove_1 3s;
+    animation-fill-mode: forwards;
+}
+.tl-bar_2{
+	animation:tlmove_2 3s;
+    animation-fill-mode: forwards;
+}
+.tl-bar_3{
+	animation:tlmove_3 3s;
+    animation-fill-mode: forwards;
+}
+.tl-bar_4{
+	animation:tlmove_4 3s;
+    animation-fill-mode: forwards;
+}
+.tl-bar_5{
+	animation:tlmove_5 3s;
+    animation-fill-mode: forwards;
+}
+.tl-bar_6{
+	animation:tlmove_6 3s;
+    animation-fill-mode: forwards;
+}
+
+.jq-jx-bar-more_style_0{
+    animation:more_0 3s;
+    animation-fill-mode: forwards;
+}
+.jq-jx-bar-more_style_1{
+    animation:more_1 3s;
+    animation-fill-mode: forwards;
+}
+.jq-jx-bar-more_style_2{
+    animation:more_2 3s;
+    animation-fill-mode: forwards;
+}
+.jq-jx-bar-more_style_3{
+    animation:more_3 3s;
+    animation-fill-mode: forwards;
+}
+.jq-jx-bar-more_style_4{
+    animation:more_4 3s;
+    animation-fill-mode: forwards;
+}
+
+
+
+@keyframes jqmove{
+	0%{width:0%;}
+	100%{width:70%;}
+}
+@-webkit-keyframes jqmove /* Safari 和 Chrome */
+{
+	0%{width:0%;}
+	100%{width:70%;}
+}
+
+.bc-time{
+	color:#fff;
+	padding-left:6px;
+	display:inline-block;
+	font-size:12px;
+}
+.other-time{
+	color:#5C6273;
+	display:inline-block;
+	font-size:12px;
+	min-width:50px;
+}
+.xl-point-div{
+	text-align:center
+}
+.xl-persent{
+	width:38px;
+	height:38px;
+	text-align:center;
+	border-radius:33px;
+	background:#F13757;
+	color:#fff;
+	line-height:38px;
+}
+.xl-point-text-con{
+	display:flex;
+	justify-content:center;
+}
+.xl-focus{
+	color:#F13757;
+	font-size:25px;
+}
+.xl-cs{
+	display:flex;
+	justify-content:space-between;
+	padding-left:10%;
+	padding-right:10%;
+	padding-bottom:15px;
+	margin-top:15px;
+}
+.xl-cs-num{
+	color:#5C6273;
+	font-size:20px;
+	text-align:center
+}
+.xl-cs-text{
+	color:#5C6273;
+	font-size:14px;
+	text-align:center;
+}
+.sd-div{
+	margin:0 auto;
+}
+
+.subFade-enter-active {
+  transition: all .3s ease;
+}
+.subFade-leave-active {
+  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.subFade-enter, .subFade-leave-to {
+  transform: translateY(-5px);
+  opacity: 0;
+}
+</style>

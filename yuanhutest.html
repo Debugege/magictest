@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <style type="text/css">
+            canvas{background: #b8edc9;}
+        </style>
+    </head>
+    <body>
+        <h5>Canvas</h5>
+        <canvas id="mycanvas" width="1000" height="1000">
+            您的浏览器不支持html5dcanvas元素
+        </canvas>
+    <script type="text/javascript">
+        var canvas=document.getElementById('mycanvas');//定义变量获取画布dom
+        var c=mycanvas.getContext('2d');//设置绘图环境2d
+        c.lineWidth=4;//设置线宽
+        c.strokeStyle="#A52A2A";//设置边颜色
+        c.fillStyle="gold";
+        //绘制圆弧
+ 
+        c.arc(150,330,30,0,Math.PI/3,true)//true逆时针绘制/fale顺时针绘制
+        c.stroke()
+        //绘制实心圆弧
+        c.beginPath();
+        c.arc(150,400,30,0,Math.PI/3,true)
+        c.fill()
+        //绘制有边 的实心圆弧
+        c.beginPath();
+        c.arc(150,260,30,0,Math.PI/3,true)
+        c.stroke()
+        c.fill()
+         
+        //封闭圆弧
+        c.beginPath();
+        c.arc(330,260,30,0,Math.PI/3,true)
+        c.closePath();
+        c.stroke()
+        //封闭实心圆弧
+         c.beginPath();
+         c.arc(400,260,30,0,Math.PI/3,true)
+         c.closePath();
+         c.fill()
+        //封闭有边实心圆弧
+         c.beginPath();
+         c.arc(480,260,30,0,Math.PI/3,true)
+         c.closePath();
+         c.stroke()
+         c.fill()
+     
+        </script>
+        
+    </body>
+    
+</html>

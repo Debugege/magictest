@@ -1,0 +1,2128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <title>tktest</title>
+    <!-- built style files will be auto injected -->
+    <script src="http://www.jq22.com/jquery/vue.min.js"></script>
+    <style>
+        .clear-both::after {
+            clear: both;
+            content: ".";
+            display: block;
+            visibility: hidden;
+            height: 0;
+        }
+        .lf {
+            float: left;
+        }
+        .rt {
+            float: right;
+        }
+        .transition {
+            -webkit-transition: all .5s ease;
+            -o-transition: all .5s ease;
+            -moz-transition: all .5s ease;
+            transition: all .5s ease;
+        }
+        .transform-scale {
+            -webkit-transform: scale(1);
+            -moz-transform: scale(1);
+            -ms-transform: scale(1);
+            transform: scale(1);
+        }
+        .hover-transform-scale {
+            -webkit-transform: scale(1.05);
+            -moz-transform: scale(1.05);
+            -ms-transform: scale(1.05);
+            transform: scale(1.05);
+        }
+        .ellipsis {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+        }
+        .text-ban {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            -khtml-user-select: none;
+            user-select: none;
+        }
+        .track-list {
+            scrollbar-face-color: #c7c7c7;
+            scrollbar-highlight-color: #c7c7c7;
+            scrollbar-3dlight-color: #c7c7c7;
+            scrollbar-darkshadow-color: #c7c7c7;
+            scrollbar-Shadow-color: #c7c7c7;
+            scrollbar-arrow-color: #c7c7c7;
+            scrollbar-track-color: #ebebeb;
+        }
+        .track-list::-webkit-scrollbar {
+            width: 7px;
+            height: 9px;
+        }
+        .track-list::-webkit-scrollbar-button:end:increment,
+        .track-list::-webkit-scrollbar-button:start:decrement {
+            display: block;
+            height: 0;
+            background-color: transparent;
+        }
+        .track-list::-webkit-scrollbar-track-piece {
+            -webkit-border-radius: 0;
+            -webkit-border-bottom-right-radius: 4px;
+            -webkit-border-bottom-left-radius: 4px;
+            background: #ebebeb;
+        }
+        .track-list::-webkit-scrollbar-thumb:vertical {
+            height: 50px;
+            background-color: rgba(250, 4, 77, 0.8);
+            -webkit-border-radius: 4px;
+        }
+        .track-list::-webkit-scrollbar-thumb:horizontal {
+            width: 50px;
+            background-color: rgba(0, 0, 0, 0.2);
+            -webkit-border-radius: 4px;
+        }
+        html {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        body,
+        div,
+        dl,
+        dt,
+        dd,
+        ul,
+        ol,
+        li,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        pre,
+        code,
+        form,
+        fieldset,
+        legend,
+        input,
+        textarea,
+        p,
+        blockquote,
+        th,
+        td,
+        hr,
+        button,
+        article,
+        aside,
+        details,
+        figcaption,
+        figure,
+        footer,
+        header,
+        hgroup,
+        menu,
+        nav,
+        section {
+            margin: 0;
+            padding: 0;
+        }
+        article,
+        aside,
+        details,
+        figcaption,
+        figure,
+        footer,
+        header,
+        hgroup,
+        menu,
+        nav,
+        section {
+            display: block;
+        }
+        audio,
+        canvas,
+        video {
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+        }
+        input,
+        select,
+        textarea {
+            font-size: 100%;
+        }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        th {
+            text-align: inherit;
+        }
+        fieldset,
+        img {
+            border: 0;
+        }
+        /* ie6 7 8(q) bug 显示为行内表现 */
+        iframe {
+            display: block;
+        }
+        /* 去掉 firefox 下此元素的边框 */
+        abbr,
+        acronym {
+            border: 0;
+            font-variant: normal;
+        }
+        /* 一致的 del 样式 */
+        del {
+            text-decoration: line-through;
+        }
+        i {
+            font-style: normal;
+        }
+        address,
+        caption,
+        cite,
+        code,
+        dfn,
+        em,
+        th,
+        var {
+            font-style: normal;
+            font-weight: 500;
+        }
+        /* 对齐是排版最重要的因素, 别让什么都居中 */
+        caption,
+        th {
+            text-align: left;
+        }
+        /* 来自yahoo, 让标题都自定义, 适应多个系统应用 */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-size: 100%;
+            font-weight: 500;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        h2 {
+            font-size: 16px;
+        }
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-size: 14px;
+        }
+        /* 解决ie下重复最后字符 */
+        q:before,
+        q:after {
+            content: '';
+        }
+        /* 统一上标和下标 */
+        sub,
+        sup {
+            position: relative;
+            font-size: 75%;
+            line-height: 0;
+            vertical-align: baseline;
+        }
+        sup {
+            top: -0.5em;
+        }
+        sub {
+            bottom: -0.25em;
+        }
+        /* 默认不显示下划线，保持页面简洁 */
+        ins,
+        a {
+            text-decoration: none;
+        }
+        /** 设置默认字体 **/
+        body,
+        button,
+        input,
+        select,
+        textarea {
+            font: 14px helvetica neue, arial, hiragino sans gb, microsoft yahei, sans-serif;
+        }
+        address,
+        cite,
+        dfn,
+        em,
+        var {
+            font-style: normal;
+        }
+        /* 将斜体扶正 */
+        code,
+        kbd,
+        pre,
+        samp {
+            font-family: courier new, courier, monospace;
+        }
+        /* 统一等宽字体 */
+        small {
+            font-size: 12px;
+        }
+        /* 小于 12px 的中文很难阅读，让 small 正常化 */
+        /** 重置列表元素 **/
+        ul,
+        ol {
+            list-style: none;
+        }
+        /** 重置文本格式元素 **/
+        a {
+            text-decoration: none;
+            cursor: pointer;
+            color: #333;
+            -webkit-transition: all .5s ease;
+            -o-transition: all .5s ease;
+            -moz-transition: all .5s ease;
+            transition: all .5s ease;
+        }
+        a:hover {
+            color: #5da1fd;
+        }
+        /** 清除选中状态蓝色边框 **/
+        a,
+        img,
+        input,
+        select,
+        textarea {
+            outline: none;
+            border: none;
+        }
+        /** 定义布局方式 **/
+        * {
+            box-sizing: border-box;
+        }
+        input[type=submit] {
+            -webkit-appearance: none;
+        }
+        /**************************/
+        /********页面样式**********/
+        /**************************/
+        body {
+            max-width: 767px;
+            margin: 0 auto;
+            color: #fff;
+            background-color: #88724d;
+        }
+        .banner {
+            width: 100%;
+            font-size: 0;
+            position: relative;
+        }
+        .banner img {
+            width: 100%;
+            height: auto;
+        }
+        .banner img.logo {
+            position: absolute;
+            top: 0.04830918rem;
+            right: 0.80515298rem;
+            width: 1.93236715rem;
+        }
+        .banner .prize {
+            position: absolute;
+            top: 0;
+            left: 0.80515298rem;
+            display: block;
+            width: 2.10950081rem;
+            height: 1.40901771rem;
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -2.44766506rem -9.64573269rem;
+            background-size: 4.63768116rem auto;
+        }
+        .banner .return {
+            position: absolute;
+            top: 0;
+            left: 0.80515298rem;
+            display: block;
+            width: 2.10950081rem;
+            height: 0.96618357rem;
+            line-height: 0.96618357rem;
+            border-radius: 0.07246377rem;
+            font-size: 14px;
+            color: #fff;
+            text-shadow: 1px 1px 1px rgba(167, 74, 10, 0.8);
+            background: #ea670d;
+            text-align: center;
+        }
+        .banner .return:after {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            content: "";
+            margin-left: -1.03864734rem;
+            border: 1.03864734rem solid transparent;
+            border-top-width: 0.41545894rem;
+            border-bottom-width: 0.41545894rem;
+            border-top-color: #ea670d;
+        }
+        .footer {
+            line-height: 30px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .container {
+            width: 100%;
+            margin-top: -1.93236715rem;
+            padding-bottom: 60px;
+            position: relative;
+            z-index: 1;
+        }
+        .map-bg {
+            width: 9.25925926rem;
+            height: 13.68599034rem;
+            margin: 0 auto;
+            padding: 1.32045089rem 0.40257649rem 0;
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=bg.png") no-repeat;
+            background-size: 100% auto;
+            border-radius: 0.5rem;
+        }
+        .map-bg .map {
+            position: relative;
+        }
+        .map-bg .row:nth-child(odd) .item:nth-child(odd) {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat 0 -3.87022398rem;
+            background-size: 5.27009223rem auto;
+        }
+        .map-bg .row:nth-child(odd) .item:nth-child(even) {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat 0 -2.08607817rem;
+            background-size: 5.27009223rem auto;
+        }
+        .map-bg .row:nth-child(odd) .item:first-child {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat 0 -7.41106719rem;
+            background-size: 5.27009223rem auto;
+        }
+        .map-bg .row:nth-child(odd) .item:last-child {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat 0 -9.18606353rem;
+            background-size: 5.27009223rem auto;
+        }
+        .map-bg .row:nth-child(even) .item:nth-child(odd) {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat 0 -2.08607817rem;
+            background-size: 5.27009223rem auto;
+        }
+        .map-bg .row:nth-child(even) .item:nth-child(even) {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat 0 -3.87022398rem;
+            background-size: 5.27009223rem auto;
+        }
+        .map-bg .row:nth-child(even) .item:first-child {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat 0 -5.63607085rem;
+            background-size: 5.27009223rem auto;
+        }
+        .map-bg .row:nth-child(even) .item:last-child {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat 0 -10.96105987rem;
+            background-size: 5.27009223rem auto;
+        }
+        .map-bg .row:first-child .item:first-child {
+            background: none !important;
+        }
+        .map-bg .row:first-child .item:first-child:after {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            content: "";
+            display: block;
+            width: 2.24637681rem;
+            height: 2.41545894rem;
+            margin-left: -1.09903382rem;
+            margin-top: -1.03864734rem;
+            z-index: 10;
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat 0 0;
+            background-size: 6.52622143rem auto;
+        }
+        .map-bg .row:last-child .item:last-child {
+            background: none !important;
+        }
+        .map-bg .row:last-child .item:last-child:after {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            content: "";
+            display: block;
+            width: 2.24637681rem;
+            height: 2.41545894rem;
+            margin-left: -1.09903382rem;
+            margin-top: -1.03864734rem;
+            z-index: 10;
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -2.43600279rem 0;
+            background-size: 6.52622143rem auto;
+        }
+        .map-bg .row .item {
+            float: left;
+            width: 1.20772947rem;
+            height: 1.5942029rem;
+            position: relative;
+        }
+        .map-bg .row .item div {
+            width: 100%;
+            height: 100%;
+        }
+        .map-bg .row .item div.wb {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -1.39071878rem -2.08607817rem;
+            background-size: 5.27009223rem auto;
+        }
+        .map-bg .row .item div.aq {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -1.39071878rem -3.87022398rem;
+            background-size: 5.27009223rem auto;
+        }
+        .map-bg .row .item div.zl {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -1.39071878rem -5.63607085rem;
+            background-size: 5.27009223rem auto;
+        }
+        .map-bg .row .item div.hb {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -1.39071878rem -7.41106719rem;
+            background-size: 5.27009223rem auto;
+        }
+        .map-bg .row .item div.std {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -2.78143756rem -2.08607817rem;
+            background-size: 5.27009223rem auto;
+        }
+        .map-bg .row .item div.tys {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -2.78143756rem -3.87022398rem;
+            background-size: 5.27009223rem auto;
+        }
+        .map-bg .row .item div.up {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -2.78143756rem -5.63607085rem;
+            background-size: 5.27009223rem auto;
+        }
+        .map-bg .row .item div.ddb {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -2.78143756rem -7.41106719rem;
+            background-size: 5.27009223rem auto;
+        }
+        .map-bg .row .item div.xtd {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -2.78143756rem -9.18606353rem;
+            background-size: 5.27009223rem auto;
+        }
+        .map-bg .route {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 999;
+            width:100%;
+            height:auto;
+        }
+        .map-bg .route .user {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2rem;
+            height: 1.4942029rem;
+            padding: 0.07246377rem;
+            -webkit-transition: all .5s ease;
+            -o-transition: all .5s ease;
+            -moz-transition: all .5s ease;
+            transition: all .5s ease;
+        }
+        .map-bg .route .user.active {
+            -webkit-animation: forwardBounce 0.5s cubic-bezier(0.3, 0.27, 0.07, 1.64);
+            -moz-animation: forwardBounce 0.5s cubic-bezier(0.3, 0.27, 0.07, 1.64);
+            -o-animation: forwardBounce 0.5s cubic-bezier(0.3, 0.27, 0.07, 1.64);
+            animation: forwardBounce 0.5s cubic-bezier(0.3, 0.27, 0.07, 1.64);
+        }
+        /*移动前后放大缩小动画*/
+        .moveup{
+            width:100px; animation: moveupani 2s;
+        }
+        /*移动前后放大缩小动画关键帧*/
+        @keyframes moveupani{
+            0%{ width: 1.20772947rem;}
+            50%{width:1.35772947rem;}
+            100%{width:2rem;}
+        }
+        @-o-keyframes moveupani{
+            0%{ width: 1.20772947rem;}
+            50%{width:1.35772947rem;}
+            100%{width:2rem;}
+        }
+        @-ms-keyframes moveupani{
+            0%{ width: 1.20772947rem;}
+            50%{width:1.35772947rem;}
+            100%{width:2rem;}
+        }
+        @-moz-keyframes moveupani{
+            0%{ width: 1.20772947rem;}
+            50%{width:1.35772947rem;}
+            100%{width:2rem;}
+        }
+        @-webkit-keyframes  moveupani{
+            0%{ width: 1.20772947rem;}
+            50%{width:1.35772947rem;}
+            100%{width:2rem;}
+        }
+        @-khtml-keyframes  moveupani{
+            0%{ width: 1.20772947rem;}
+            50%{width:1.35772947rem;}
+            100%{width:2rem;}
+        }
+        /*移动前后放大缩小动画*/
+        .movedown{
+            width:100px; animation: movedownani 2s;
+        }
+        /*移动前后放大缩小动画关键帧*/
+        @keyframes movedownani{
+            0%{ width: 2rem;}
+            50%{width:1.35772947rem;}
+            100%{width:1.20772947rem;}
+        }
+        @-o-keyframes movedownani{
+            0%{ width: 2rem;}
+            50%{width:1.35772947rem;}
+            100%{width:1.20772947rem;}
+        }
+        @-ms-keyframes movedownani{
+            0%{ width: 2rem;}
+            50%{width:1.35772947rem;}
+            100%{width:1.20772947rem;}
+        }
+        @-moz-keyframes movedownani{
+            0%{ width: 2rem;}
+            50%{width:1.35772947rem;}
+            100%{width:1.20772947rem;}
+        }
+        @-webkit-keyframes  movedownani{
+            0%{ width: 2rem;}
+            50%{width:1.35772947rem;}
+            100%{width:1.20772947rem;}
+        }
+        @-khtml-keyframes  movedownani{
+            0%{ width: 2rem;}
+            50%{width:1.35772947rem;}
+            100%{width:1.20772947rem;}
+        }
+        .map-bg .route .user .img-box {
+            width: 100%;
+            height: auto;
+            margin-top: -0.306119rem;
+            margin-left: -0.406119rem;
+            /*position: relative;*/
+        }
+
+        .map-bg .route .user .img-box img {
+            width: 100%;
+            height: 100%;
+            /*border-radius: 50%;*/
+        }
+        .dice {
+            position: fixed;
+            bottom: 30px;
+            left: 80%;
+            display: block;
+            width: 160px;
+            height: 46px;
+            line-height: 46px;
+            padding-left: 20px;
+            margin-left: -80px;
+            font-size: 18px;
+            border-radius: 23px;
+            color: #fff;
+            background-color: rgba(228, 57, 60, 0.9);
+            box-shadow: 3px 5px 20px rgba(0, 0, 0, 0.8);
+            text-align: center;
+            z-index: 999;
+        }
+        .dice:hover {
+            color: #fff;
+        }
+        .dice em {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            display: block;
+            width: 88px;
+            height: 24px;
+            margin-left: -50px;
+            line-height: 24px;
+            font-size: 12px;
+            border-radius: 15px;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+        .dice span {
+            position: absolute;
+            top: 3px;
+            left: 15px;
+            display: block;
+            width: 40px;
+            height: 40px;
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -184px -40px;
+            background-size: 230.4px auto;
+        }
+        .dice span.dice_1 {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png) no-repeat -184px -40px;
+            background-size: 230.4px auto;
+            }
+            .dice span.dice_2 {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -184px -80px;
+            background-size: 230.4px auto;
+        }
+        .dice span.dice_3 {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -184px -120px;
+            background-size: 230.4px auto;
+        }
+        .dice span.dice_4 {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -184px -160px;
+            background-size: 230.4px auto;
+        }
+        .dice span.dice_5 {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -184px -200px;
+            background-size: 230.4px auto;
+        }
+        .dice span.dice_6 {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -184px -240px;
+            background-size: 230.4px auto;
+        }
+        .dice span.dice_roll_1 {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -184px -280px;
+            background-size: 230.4px auto;
+            -webkit-animation: shake-in 0.5s infinite;
+            -o-animation: shake-in 0.5s infinite;
+            animation: shake-in 0.5s infinite;
+        }
+        .dice span.dice_roll_2 {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -184px -320px;
+            background-size: 230.4px auto;
+            -webkit-animation: shake-in 0.5s infinite;
+            -o-animation: shake-in 0.5s infinite;
+            animation: shake-in 0.5s infinite;
+        }
+        .dice span.dice_roll_3 {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -184px -360px;
+            background-size: 230.4px auto;
+            -webkit-animation: shake-in 0.5s infinite;
+            -o-animation: shake-in 0.5s infinite;
+            animation: shake-in 0.5s infinite;
+        }
+        .dice i {
+            position: absolute;
+            top: -7px;
+            left: 5px;
+            display: block;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            border-radius: 50%;
+            font-size: 12px;
+            color: #fff;
+            background-color: red;
+            box-shadow: 0 0 1px #000, 0 1px 3px rgba(0, 0, 0, 0.6), 1px 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+        .awards,
+        .rule {
+            width: 9.25925926rem;
+            margin: 20px auto 0;
+        }
+        .awards h3,
+        .rule h3 {
+            line-height: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #f8e066;
+        }
+        .awards table {
+            margin-top: 10px;
+            border: 1px solid #fff;
+            border-collapse: collapse;
+            font-size: 14px;
+            text-align: center;
+        }
+        .awards th,
+        .awards td {
+            padding: 10px 0;
+            line-height: 20px;
+            border: 1px solid #fff;
+        }
+        .awards th span,
+        .awards td span {
+            color: #f8e066;
+        }
+        .awards th {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .awards th:nth-child(1) {
+            width: 18%;
+        }
+        .awards th:nth-child(2) {
+            width: 60%;
+        }
+        .awards th:nth-child(3) {
+            width: 22%;
+        }
+        .awards td.title {
+            font-weight: bold;
+        }
+        .rule ol {
+            margin-top: 10px;
+            padding-left: 20px;
+            line-height: 24px;
+            font-size: 14px;
+            text-align: justify;
+            list-style-type: decimal;
+        }
+        .enroll-content {
+            width: 9.25925926rem;
+            margin: 2.22222222rem auto 0;
+            padding-bottom: 0.48309179rem;
+            color: #333;
+            background-color: #fff;
+            border-radius: 0.24154589rem;
+            position: relative;
+        }
+        .enroll-content h3.title {
+            position: absolute;
+            top: -0.89371981rem;
+            left: 0;
+            width: 100%;
+            z-index: 1;
+        }
+        .enroll-content .content {
+            padding: 0 20px;
+        }
+        .enroll-content .content .item {
+            width: 100%;
+            height: 40px;
+            margin-top: 20px;
+            padding-left: 40px;
+            position: relative;
+        }
+        .enroll-content .content .item:last-child {
+            padding-left: 0;
+        }
+        .enroll-content .content .item > span {
+            position: absolute;
+            top: 0;
+            left: 0;
+            line-height: 40px;
+            font-size: 14px;
+        }
+        .enroll-content .content .item > input {
+            width: 100%;
+            height: 40px;
+            line-height: 38px;
+            padding: 0 10px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+            -webkit-appearance: none;
+        }
+        .enroll-content .content .item > a {
+            display: block;
+            width: 3.8647343rem;
+            height: 1.11111111rem;
+            margin: 0.48309179rem auto 0;
+            line-height: 1.11111111rem;
+            border-radius: 0.55555556rem;
+            font-size: 16px;
+            color: #fff;
+            background-color: #e4393c;
+            text-align: center;
+        }
+        .enroll-content .content .item > p {
+            line-height: 20px;
+            font-size: 12px;
+            text-align: right;
+            color: #999;
+        }
+        .enroll-content .content .item > p a {
+            color: #e4393c;
+        }
+        .fragment {
+            width: 9.25925926rem;
+            margin: 2.22222222rem auto 0;
+            padding-bottom: 0.48309179rem;
+            color: #333;
+            background-color: #fff;
+            border-radius: 0.24154589rem;
+            position: relative;
+        }
+        .fragment h3.title {
+            position: absolute;
+            top: -0.89371981rem;
+            left: 0;
+            width: 100%;
+            z-index: 1;
+        }
+        .fragment .content {
+            padding: 0 10px;
+        }
+        .fragment table {
+            width: 100%;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-collapse: collapse;
+            font-size: 14px;
+            text-align: center;
+        }
+        .fragment th,
+        .fragment td {
+            padding: 10px 0;
+            line-height: 20px;
+            border: 1px solid #ddd;
+        }
+        .fragment th {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .fragment th:nth-child(1) {
+            width: 18%;
+        }
+        .fragment th:nth-child(2) {
+            width: 60%;
+        }
+        .fragment th:nth-child(3) {
+            width: 22%;
+        }
+        .fragment td div {
+            width: 1.20772947rem;
+            height: 1.36876006rem;
+            margin: 0 auto;
+            position: relative;
+        }
+        .fragment td div.wb {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -1.39071878rem -2.34226321rem;
+            background-size: 5.27009223rem auto;
+        }
+        .fragment td div.aq {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -1.39071878rem -4.12640902rem;
+            background-size: 5.27009223rem auto;
+        }
+        .fragment td div.zl {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -1.39071878rem -5.89225589rem;
+            background-size: 5.27009223rem auto;
+        }
+        .fragment td div.hb {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -1.39071878rem -7.66725223rem;
+            background-size: 5.27009223rem auto;
+        }
+        .fragment td div.std {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -2.78143756rem -2.34226321rem;
+            background-size: 5.27009223rem auto;
+        }
+        .fragment td div.tys {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -2.78143756rem -4.12640902rem;
+            background-size: 5.27009223rem auto;
+        }
+        .fragment td div.up {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -2.78143756rem -5.89225589rem;
+            background-size: 5.27009223rem auto;
+        }
+        .fragment td div.ddb {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -2.78143756rem -7.66725223rem;
+            background-size: 5.27009223rem auto;
+        }
+        .fragment td div.xtd {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -2.78143756rem -9.44224857rem;
+            background-size: 5.27009223rem auto;
+        }
+        .fragment td div.firstPrize {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -1.39071878rem -9.44224857rem;
+            background-size: 5.27009223rem auto;
+        }
+        .fragment td div.secondPrize {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -1.39071878rem -11.21724491rem;
+            background-size: 5.27009223rem auto;
+        }
+        .fragment td span {
+            font-size: 12px;
+            color: #e4393c;
+        }
+        .fragment td em {
+            padding: 5px;
+            border-radius: 3px;
+            color: #fff;
+            background-color: #ddd;
+            font-size: 12px;
+        }
+        .fragment td em.succ {
+            background-color: #f8e066;
+        }
+        .fragment td em.tel {
+            background-color: #e4393c;
+        }
+        .fragment td em.tel a {
+            color: #fff;
+        }
+        .fragment td.title {
+            font-weight: bold;
+        }
+        h3.title {
+            width: 100%;
+            height: 1.37681159rem;
+            padding-bottom: 0.41062802rem;
+            line-height: 0.96618357rem;
+            font-size: 18px;
+            font-weight: bold;
+            color: #e4393c;
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat center -16.96036937rem;
+            background-size: auto 18.33718097rem;
+            text-align: center;
+        }
+        h3.title + p {
+            line-height: 20px;
+            padding-top: 0.72463768rem;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            color: #e4393c;
+        }
+        .popup_box {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            display: block;
+        }
+        .popup_box .frame-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 7.7294686rem;
+            height: auto;
+            padding-bottom: 0.48309179rem;
+            margin-top: -4.90338164rem;
+            margin-left: -3.8647343rem;
+            background-color: #fff;
+            border-radius: 0.24154589rem;
+        }
+        .popup_box .frame-content h3.title {
+            position: absolute;
+            top: -0.89371981rem;
+            left: 0;
+            width: 100%;
+            z-index: 1;
+        }
+        .popup_box .frame-content .prize-box {
+            width: 3.62318841rem;
+            height: 4.7826087rem;
+            margin: 0 auto;
+            position: relative;
+        }
+        .popup_box .frame-content .prize-box div {
+            width: 100%;
+            height: 100%;
+        }
+        .popup_box .frame-content .prize-box div.wb {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -4.17215635rem -6.25823452rem;
+            background-size: 15.81027668rem auto;
+        }
+        .popup_box .frame-content .prize-box div.aq {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -4.17215635rem -11.61067194rem;
+            background-size: 15.81027668rem auto;
+        }
+        .popup_box .frame-content .prize-box div.zl {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -4.17215635rem -16.90821256rem;
+            background-size: 15.81027668rem auto;
+        }
+        .popup_box .frame-content .prize-box div.hb {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -4.17215635rem -22.23320158rem;
+            background-size: 15.81027668rem auto;
+        }
+        .popup_box .frame-content .prize-box div.std {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -8.34431269rem -6.25823452rem;
+            background-size: 15.81027668rem auto;
+        }
+        .popup_box .frame-content .prize-box div.tys {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -8.34431269rem -11.61067194rem;
+            background-size: 15.81027668rem auto;
+        }
+        .popup_box .frame-content .prize-box div.up {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -8.34431269rem -16.90821256rem;
+            background-size: 15.81027668rem auto;
+        }
+        .popup_box .frame-content .prize-box div.ddb {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -8.34431269rem -22.23320158rem;
+            background-size: 15.81027668rem auto;
+        }
+        .popup_box .frame-content .prize-box div.xtd {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -8.34431269rem -27.5581906rem;
+            background-size: 15.81027668rem auto;
+        }
+        .popup_box .frame-content .prize-box div.firstPrize {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -4.17215635rem -27.5581906rem;
+            background-size: 15.81027668rem auto;
+        }
+        .popup_box .frame-content .prize-box div.secondPrize {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -4.17215635rem -32.88317962rem;
+            background-size: 15.81027668rem auto;
+        }
+        .popup_box .frame-content .prize-box div.nothing {
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -11.9675011rem -27.5581906rem;
+            background-size: 15.81027668rem auto;
+        }
+        .popup_box .frame-content .info {
+            padding: 0 0.48309179rem;
+            line-height: 0.6763285rem;
+            text-indent: 28px;
+            font-size: 14px;
+            color: #333;
+            text-align: justify;
+        }
+        .popup_box .frame-content .btn {
+            display: block;
+            width: 3.8647343rem;
+            height: 1.11111111rem;
+            margin: 0.48309179rem auto 0;
+            line-height: 1.11111111rem;
+            border-radius: 0.55555556rem;
+            font-size: 16px;
+            color: #fff;
+            background-color: #e4393c;
+            text-align: center;
+        }
+        .popup_box .frame-content .close {
+            position: absolute;
+            left: 50%;
+            bottom: -1.69082126rem;
+            display: block;
+            width: 1.20772947rem;
+            height: 1.20772947rem;
+            margin-left: -0.60386473rem;
+            background: url("http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=icon.png") no-repeat -5.55555556rem 0;
+            background-size: 6.95652174rem auto;
+        }
+        .popup_box .share-img {
+            position: absolute;
+            top: 0;
+            right: 20px;
+            width: 180px;
+        }
+        .popup_box .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4.83091787rem;
+            height: 7.24637681rem;
+            margin-left: -2.41545894rem;
+            margin-top: -3.01932367rem;
+            font-size: 0;
+            text-align: center;
+        }
+        .popup_box .loading img {
+            width: 4.83091787rem;
+            height: 4.83091787rem;
+        }
+        .popup_box .loading p {
+            margin-top: -0.48309179rem;
+            height: 0.72463768rem;
+            line-height: 0.72463768rem;
+            font-size: 16px;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        @keyframes forwardBounce {
+            40% {
+                -webkit-animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+                animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+                -webkit-transform: translateY(-20%);
+                -moz-transform: translateY(-20%);
+                -ms-transform: translateY(-20%);
+                -o-transform: translateY(-20%);
+                transform: translateY(-20%);
+            }
+        }
+        @-o-keyframes forwardBounce {
+            40% {
+                -webkit-animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+                animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+                -webkit-transform: translateY(-20%);
+                -moz-transform: translateY(-20%);
+                -ms-transform: translateY(-20%);
+                -o-transform: translateY(-20%);
+                transform: translateY(-20%);
+            }
+        }
+        @-ms-keyframes forwardBounce {
+            40% {
+                -webkit-animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+                animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+                -webkit-transform: translateY(-20%);
+                -moz-transform: translateY(-20%);
+                -ms-transform: translateY(-20%);
+                -o-transform: translateY(-20%);
+                transform: translateY(-20%);
+            }
+        }
+        @-moz-keyframes forwardBounce {
+            40% {
+                -webkit-animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+                animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+                -webkit-transform: translateY(-20%);
+                -moz-transform: translateY(-20%);
+                -ms-transform: translateY(-20%);
+                -o-transform: translateY(-20%);
+                transform: translateY(-20%);
+            }
+        }
+        @-webkit-keyframes forwardBounce {
+            40% {
+                -webkit-animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+                animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+                -webkit-transform: translateY(-20%);
+                -moz-transform: translateY(-20%);
+                -ms-transform: translateY(-20%);
+                -o-transform: translateY(-20%);
+                transform: translateY(-20%);
+            }
+        }
+        @-khtml-keyframes forwardBounce {
+            40% {
+                -webkit-animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+                animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+                -webkit-transform: translateY(-20%);
+                -moz-transform: translateY(-20%);
+                -ms-transform: translateY(-20%);
+                -o-transform: translateY(-20%);
+                transform: translateY(-20%);
+            }
+        }
+        [v-cloak] {
+            display: none;
+        }
+        .fade-enter,
+        .fade-leave-to {
+            opacity: 0;
+        }
+        .fade-enter-active,
+        .fade-leave-active {
+            -webkit-transition: all .5s;
+            -moz-transition: all .5s;
+            -o-transition: all .5s;
+            transition: all .5s;
+        }
+        .slider-bttp-enter,
+        .slider-bttp-leave-to {
+            opacity: 0;
+        }
+        .slider-bttp-enter {
+            -webkit-transform: translateY(100%);
+            -moz-transform: translateY(100%);
+            -ms-transform: translateY(100%);
+            -o-transform: translateY(100%);
+            transform: translateY(100%);
+        }
+        .slider-bttp-leave-active {
+            opacity: 0;
+        }
+        .slider-bttp-enter-active,
+        .slider-bttp-leave-active {
+            position: absolute;
+            -webkit-transition: all .5s;
+            -moz-transition: all .5s;
+            -o-transition: all .5s;
+            transition: all .5s;
+        }
+        .slider-lfrt-enter,
+        .slider-lfrt-leave-to {
+            opacity: 0;
+        }
+        .slider-lfrt-enter {
+            -webkit-transform: translateX(100%);
+            -moz-transform: translateX(100%);
+            -ms-transform: translateX(100%);
+            -o-transform: translateX(100%);
+            transform: translateX(100%);
+        }
+        .slider-lfrt-leave-active {
+            -webkit-transform: translateX(-100%);
+            -moz-transform: translateX(-100%);
+            -ms-transform: translateX(-100%);
+            -o-transform: translateX(-100%);
+            transform: translateX(-100%);
+        }
+        .slider-lfrt-enter-active,
+        .slider-lfrt-leave-active {
+            position: absolute;
+            -webkit-transition: all .5s;
+            -moz-transition: all .5s;
+            -o-transition: all .5s;
+            transition: all .5s;
+        }
+        .slider-enter,
+        .slider-leave-to {
+            opacity: 0;
+            height: 0;
+        }
+        .slider-enter-active,
+        .slider-leave-active {
+            -webkit-transition: all .5s;
+            -moz-transition: all .5s;
+            -o-transition: all .5s;
+            transition: all .5s;
+        }
+        .shake-enter-active {
+            -webkit-animation: shake-in 0.5s;
+            -o-animation: shake-in 0.5s;
+            animation: shake-in 0.5s;
+        }
+        .shake-leave-active {
+            -webkit-transition: all .5s;
+            -moz-transition: all .5s;
+            -o-transition: all .5s;
+            transition: all .5s;
+        }
+        .shake-leave-to {
+            opacity: 0;
+            height: 0;
+        }
+        @keyframes shake-in {
+            0% {
+                transform: translateX(9%);
+            }
+            16.6% {
+                transform: translateX(-9%);
+            }
+            33.33% {
+                transform: translateX(6%);
+            }
+            50% {
+                transform: translateX(-6%);
+            }
+            66.6% {
+                transform: translateX(3%);
+            }
+            83.33% {
+                transform: translateX(-3%);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+        @-o-keyframes shake-in {
+            0% {
+                transform: translateX(9%);
+            }
+            16.6% {
+                transform: translateX(-9%);
+            }
+            33.33% {
+                transform: translateX(6%);
+            }
+            50% {
+                transform: translateX(-6%);
+            }
+            66.6% {
+                transform: translateX(3%);
+            }
+            83.33% {
+                transform: translateX(-3%);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+        @-ms-keyframes shake-in {
+            0% {
+                transform: translateX(9%);
+            }
+            16.6% {
+                transform: translateX(-9%);
+            }
+            33.33% {
+                transform: translateX(6%);
+            }
+            50% {
+                transform: translateX(-6%);
+            }
+            66.6% {
+                transform: translateX(3%);
+            }
+            83.33% {
+                transform: translateX(-3%);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+        @-moz-keyframes shake-in {
+            0% {
+                transform: translateX(9%);
+            }
+            16.6% {
+                transform: translateX(-9%);
+            }
+            33.33% {
+                transform: translateX(6%);
+            }
+            50% {
+                transform: translateX(-6%);
+            }
+            66.6% {
+                transform: translateX(3%);
+            }
+            83.33% {
+                transform: translateX(-3%);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+        @-webkit-keyframes shake-in {
+            0% {
+                transform: translateX(9%);
+            }
+            16.6% {
+                transform: translateX(-9%);
+            }
+            33.33% {
+                transform: translateX(6%);
+            }
+            50% {
+                transform: translateX(-6%);
+            }
+            66.6% {
+                transform: translateX(3%);
+            }
+            83.33% {
+                transform: translateX(-3%);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+        @-khtml-keyframes shake-in {
+            0% {
+                transform: translateX(9%);
+            }
+            16.6% {
+                transform: translateX(-9%);
+            }
+            33.33% {
+                transform: translateX(6%);
+            }
+            50% {
+                transform: translateX(-6%);
+            }
+            66.6% {
+                transform: translateX(3%);
+            }
+            83.33% {
+                transform: translateX(-3%);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+        .bounce-enter-active {
+            -webkit-animation: bounce-in 0.5s;
+            -o-animation: bounce-in 0.5s;
+            animation: bounce-in 0.5s;
+        }
+        .bounce-leave-active {
+            -webkit-transition: all .5s;
+            -moz-transition: all .5s;
+            -o-transition: all .5s;
+            transition: all .5s;
+        }
+        .bounce-leave-to {
+            opacity: 0;
+            height: 0;
+        }
+        @keyframes bounce-in {
+            0% {
+                transform: translateY(9%);
+            }
+            16.6% {
+                transform: translateY(-9%);
+            }
+            33.33% {
+                transform: translateY(6%);
+            }
+            50% {
+                transform: translateY(-6%);
+            }
+            66.6% {
+                transform: translateY(3%);
+            }
+            83.33% {
+                transform: translateY(-3%);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        @-o-keyframes bounce-in {
+            0% {
+                transform: translateY(9%);
+            }
+            16.6% {
+                transform: translateY(-9%);
+            }
+            33.33% {
+                transform: translateY(6%);
+            }
+            50% {
+                transform: translateY(-6%);
+            }
+            66.6% {
+                transform: translateY(3%);
+            }
+            83.33% {
+                transform: translateY(-3%);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        @-ms-keyframes bounce-in {
+            0% {
+                transform: translateY(9%);
+            }
+            16.6% {
+                transform: translateY(-9%);
+            }
+            33.33% {
+                transform: translateY(6%);
+            }
+            50% {
+                transform: translateY(-6%);
+            }
+            66.6% {
+                transform: translateY(3%);
+            }
+            83.33% {
+                transform: translateY(-3%);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        @-moz-keyframes bounce-in {
+            0% {
+                transform: translateY(9%);
+            }
+            16.6% {
+                transform: translateY(-9%);
+            }
+            33.33% {
+                transform: translateY(6%);
+            }
+            50% {
+                transform: translateY(-6%);
+            }
+            66.6% {
+                transform: translateY(3%);
+            }
+            83.33% {
+                transform: translateY(-3%);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        @-webkit-keyframes bounce-in {
+            0% {
+                transform: translateY(9%);
+            }
+            16.6% {
+                transform: translateY(-9%);
+            }
+            33.33% {
+                transform: translateY(6%);
+            }
+            50% {
+                transform: translateY(-6%);
+            }
+            66.6% {
+                transform: translateY(3%);
+            }
+            83.33% {
+                transform: translateY(-3%);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        @-khtml-keyframes bounce-in {
+            0% {
+                transform: translateY(9%);
+            }
+            16.6% {
+                transform: translateY(-9%);
+            }
+            33.33% {
+                transform: translateY(6%);
+            }
+            50% {
+                transform: translateY(-6%);
+            }
+            66.6% {
+                transform: translateY(3%);
+            }
+            83.33% {
+                transform: translateY(-3%);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+    </style>
+</head>
+<body>
+<!-- built script files will be auto injected -->
+
+<div class="banner">
+    <img src="http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=banner.jpg" alt="">
+    <a class="prize" ></a>
+</div>
+
+<div id="container" class="container">
+    <div class="map-bg">
+        <div class="map">
+            <div id="map">
+                <div class="row clear-both" v-for="(row,sub) in prizes" :keys="sub">
+                    <div class="item" v-for="(item, index) in row" :keys="index">
+                        <div :class="item"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="route">
+                <transition name="bounce">
+
+                    <div id="route" v-show="userShow" :style="'top:'+userTop+'px;left:'+userLeft+'px;'" :class="'user '+(isActive?'active':'')+(moveup?'moveup':'movedown')">
+                        <div class="img-box">
+                            <img src="http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=user1.png" alt="" >
+                        </div>
+                    </div>
+
+                </transition>
+            </div>
+        </div>
+        <!--行进扔骰子弹窗提示-->
+        <a @click="dice" class="dice">
+            <span :class="'dice_'+dicePoints"></span>
+            <i>{{diceNum}}</i>
+            <transition name="slider-bttp">
+
+                <em v-show="isForwarding">正在前进</em>
+
+            </transition>
+            <transition name="slider-bttp">
+                <em v-show="forwardend" @click="refreshtk">再战一圈</em>
+            </transition>
+            扔骰子
+        </a>
+    </div>
+    <!--碾压坦克战绩弹窗-->
+
+        <div v-show="popup_prize" class="popup_box">
+
+                <div v-show="popup_prize" class="frame-content">
+                    <h3 class="title">{{popup_title}}</h3>
+                    <div class="prize-box"><div :class="popup_class"></div></div>
+                    <p class="info">{{popup_info}}</p>
+                    <a @click="popup_prize=false;popup_share=true;" class="btn">分享继续</a>
+                    <a @click="popup_prize=false" class="close"></a>
+                </div>
+
+        </div>
+
+    <!--完赛弹窗-->
+
+        <div v-show="popup_end" class="popup_box">
+
+
+                <div v-show="popup_end" class="frame-content">
+                    <h3 class="title">{{popup_title}}</h3>
+                    <div class="prize-box"><div :class="popup_class"></div></div>
+                    <p class="info">{{popup_info}}</p>
+                    <a @click="refreshtk" class="btn">再战一圈</a>
+                    <a @click="popup_end=false" class="close"></a>
+                </div>
+
+
+        </div>
+
+    <!--分享提示弹窗-->
+
+        <div @click="popup_share=false" v-show="popup_share" class="popup_box">
+            <img class="share-img" src="http://39.104.68.33:8440/v1/commonCtl/ezonIcon?picPath=files/game/&picName=share.png" alt=""/>
+        </div>
+
+</div>
+
+
+
+
+
+
+<script>
+    /*var prize=["","","hb","std","ddb","zl","up","ddb","hb","ddb","tys","ddb","aq","","up","hb","","ddb","wb","std","tys","hb","ddb","","xtd","ddb","up","tys","","ddb","std","hb","ddb","zl","xtd","","ddb","xtd","aq","up","hb","std","xtd","","ddb","tys","wb","hb","ddb","std","ddb","xtd","tys","","hb","up","xtd","ddb","zl","ddb","xtd","hb","","up","ddb","std","hb","tys","aq","ddb","std","up","ddb","wb","tys","",""];//线路， 实际项目中此处应该为后台传参而不是前*/
+    var prize=[,"xtd","","wb","","","wb",
+        "","","","aq","aq","","",
+        "","","","aq","aq","","",
+        "","","","aq","aq","","",
+        "","","","aq","aq","","",
+        "","","","aq","aq","","",
+        "end",];//坦克行进线路7个一行
+
+    var frame_content=[
+        {
+            "title": "完赛证明",
+            "class": "end",
+            "info": "坚持打卡，赛完42公里，棒！"
+        },
+        {
+            "title": "压到1辆坦克",
+            "class": "aq",
+            "info": "真是太厉害"
+        },
+        {
+            "title": "压到5辆坦克",
+            "class": "wb",
+            "info": "真是太厉害"
+        },
+        {
+            "title": "压到3辆坦克",
+            "class": "xtd",
+            "info": "真是太厉害"
+        },
+        {
+            "title": "压到xx辆坦克",
+            "class": "std",
+            "info": "真是太厉害"
+        },
+        {
+            "title": "压到xx辆坦克",
+            "class": "tys",
+            "info": "真是太厉害"
+        },
+        {
+            "title": "压到xx辆坦克",
+            "class": "up",
+            "info": "真是太厉害"
+        },
+        {
+            "title": "压到xx辆坦克",
+            "class": "ddb",
+            "info": "真是太厉害"
+        },
+        {
+            "title": "压到xx辆坦克",
+            "class": "hb",
+            "info": "真是太厉害"
+        },
+        {
+            "title": "压到xx辆坦克",
+            "class": "firstPrize",
+            "info": "真是太厉害"
+        },
+        {
+            "title": "压到xx辆坦克",
+            "class": "secondPrize",
+            "info": "真是太厉害"
+        },
+        {
+            "title": "木有碾压到坦克",
+            "class": "nothing",
+            "info": "真是太可惜了，请再接再厉！"
+        }
+    ]//弹框的内容信息
+
+
+    var vm=new Vue({
+        el:"#container",
+        data:{
+            prizes:[],//线路布局
+            prizesLen:7,//每行线路的长度
+            userShow:false,//是否显示用户头像
+            userid:'',//用户标识
+            userTop:0,//用户头像的top
+            userLeft:0,//用户头像的left
+            stepNum:2,//当前用户的起始步数 最小为1
+            stepX:0,//每步移动的X值/格子宽
+            stepY:0,//每步移动的Y值/格子高/行高
+            stepForward:1,//每次移动的步数
+            isActive:false,//跳一下的动画
+            moveup:'',//升空放大动画
+            movedown:false,//落地缩小动画
+            turnleft:false,//左转动画
+            turnright:false,//右转动画
+            isForward:true,//是否正在前进
+            isForwarding:false,//正在前进的提示信息
+            forwardend:false,
+            dicePoints:"1",//骰子点数
+            diceNum:99,//摇骰子次数
+            diceTime:null,//是否摇骰子
+            userOffseTop:0,//是否摇骰子
+            popup_share:false,//分享弹框
+            popup_prize:false,//战果弹框
+            popup_end:false,//完赛弹窗
+            popup_title:'',//弹框标题
+            popup_class:'',//弹框class
+            popup_info:'',//弹框信息
+            freshmarker:false,//刷新标记
+            oddrow:true,//行数奇数偶数判断，决定样式底纹
+            evenrow:false,//行数奇数偶数判断，决定样式底纹
+
+        },
+
+        methods:{
+            refreshtk:function(cond){//再战一圈刷新
+                //再战一圈刷新
+                popup_share=false;
+                popup_prize=false;
+                popup_end=false;
+                freshmarker=true;
+                stepNum=0;
+                //alert(stepNum);
+                window.location.reload();
+            },
+
+            dice:function () {//骰子开始摇动
+                //alert('moveup:'+this.moveup+'   '+'movedown:'+this.movedown);
+                if(this.isForward){//是否正在前进
+                    if(this.diceNum===0){
+                        alert("您扔骰子的次数已用完~");
+                        return false;
+                    }
+                    this.diceNum--;
+                    var route = document.getElementById("route");
+                    this.userOffseTop=0;
+                    this.getTop(route);
+                    var routeHeight=route.clientHeight;
+                    var top = document.documentElement.clientHeight || document.body.clientHeight;
+
+                    //this.scrollToTop(this.userOffseTop-top/2+routeHeight/2,500);//页面中点平滑滚动到用户头像处
+
+                    this.isForward=false;//正在前进中
+
+                    var i=1;
+                    this.diceTime=setInterval(function () {
+                        this.dicePoints='roll_'+i;
+                        i++;
+                        i>3?i=1:i;
+                    }.bind(this),500)
+
+                    setTimeout(function () {//2s后前进，实际项目中原本为后台返回的点数 f 和奖品信息 p 成功后，再调用 forward(f,p)并传参。
+                        this.forward();
+                    }.bind(this),2000)
+                }else {//用户游戏正在进行中按压骰子提示
+                    if(this.stepNum>=43){
+                        this.isForwarding=false;
+                        this.forwardend=true;//再战一圈弹窗出现
+                        //alert('forwardend: '+this.forwardend);
+                        //alert('isForwarding: '+this.isForwarding);
+                    }
+                    else{
+                        this.isForwarding=true;//正在行进提示
+                        //alert('forwardend: '+this.forwardend);
+                        //alert('isForwarding: '+this.isForwarding);
+                    };//弹框出现
+                    //this.isForwarding=true;
+                    setTimeout(function (){ this.isForwarding=false }.bind(this),500)
+                };
+                this.moveup=true;
+                this.movedown=true;
+            },
+            forward:function () {//开始前进 实际项目中原本为后台返回的点数 f 和奖品信息 p 成功后，再调用 forward(f,p)并传参。
+                //实际项目中，参数f p 应该传参而不是生成。
+                //var f=this.randomNum(1,6);//生成随机步数
+                var f=5;
+                if(this.stepNum+f-1>=42){
+                    var p=prize[42];
+                }
+                else{
+                    var p=prize[this.stepNum+f-1]===""?"nothing":prize[this.stepNum+f-1];//获得当前点数的奖品信息
+                };
+                this.stepForward=f;//每次移动的步数
+
+                for(var i=0;i<frame_content.length;i++){//获取奖品信息
+                    if(frame_content[i].class===p){
+                        this.popup_title=frame_content[i].title;//弹框标题
+                        this.popup_class=p;//弹框class
+                        this.popup_info=frame_content[i].info;//弹框信息
+                    }
+                }
+
+                clearInterval(this.diceTime);//骰子停止摇动
+                this.dicePoints=this.stepForward;//显示点数
+                this.bounce(1);//开始跳动
+            },
+            bounce:function (i) {//开始移动
+                if(this.stepNum>=43){//到达终点~
+                    //实际项目中,终点应该由后台控制并判断一等奖二等奖等信息
+                    this.isForward=false;//前进停止
+                    this.popup_prize=false;//战绩弹框隐藏s
+                    //alert(this.stepNum);
+                    this.popup_end=true;//完赛弹窗出现
+                    //this.stepNum=0;//重置步数
+                    //alert(this.popup_prize);
+                    return false;
+                }
+                i++;//计步
+                //alert(i);
+                if((Math.floor(i/7)+1)%2===0){
+                    oddrow=true;
+                    evenrow=false;
+                    // alert('oddrow: '+oddrow);
+                }
+                else {
+                    evenrow=true;
+                    oddrow=false;
+                }//判断奇数行偶数行，选择样式图片
+                //alert(oddrow);
+                this.location(this.stepNum+1);//前进一步
+                this.isActive=false;//跳一下
+                //document.getElementById("audio").play();//播放音频
+                var time=setTimeout(function () {//每隔800前进一步
+                    this.isActive=false;
+                    if(this.stepForward<i){
+                        this.isForward=true;//前进停止
+                        if(this.stepNum>=43){
+                            this.popup_prize=false;//弹框出现
+                            this.popup_end=true;//完赛弹窗出现
+                        }
+                        else{
+                            this.moveup=false;
+                            this.popup_prize=true;
+                        };//弹框出现
+                        clearTimeout(time);
+                    }else {
+                        setTimeout(function () {this.bounce(i)}.bind(this),20);
+                    }
+
+                }.bind(this),500);
+
+            },
+            location:function (n) {//坦克位置定位
+                this.stepNum=this.isNum(n);//起始步数必须为正整数
+                this.userShow=true;
+
+                var col,row=Math.ceil(this.stepNum/this.prizesLen);//行数
+                col= row%2 === 0 ? this.stepNum%7===0 ? 1 : this.prizesLen - this.stepNum%this.prizesLen + 1 :
+                        this.stepNum%7===0 ? 7 : this.stepNum%this.prizesLen;
+
+                this.userTop=this.stepY*(row-1);//行高 * 行数
+                this.userLeft= this.stepX*(col-1);//left：格子宽 * 当前的行的第几格子(偶数行倒着走)
+            },
+            scrollToTop:function (distance, scrollDuration) {//页面中点平滑滚动到用户头像处
+                var spacing=window.scrollY-distance,
+                        scrollStep = -spacing / (scrollDuration / 15),
+                        scrollInterval = setInterval(function(){
+                            spacing>0? window.scrollY >= distance?
+                                    window.scrollBy( 0, scrollStep ):clearInterval(scrollInterval)
+                                    : window.scrollY <= distance?
+                                    window.scrollBy( 0, scrollStep ):clearInterval(scrollInterval);
+                        },15);
+            },
+            getTop:function (e,i) {//获得元素的距离页面顶部的高度
+                this.userOffseTop+=e.offsetTop;
+                if(e.offsetParent){
+                    e=e.offsetParent;
+                    this.getTop(e);
+                }
+            },
+            randomNum:function(minNum,maxNum){//获得随机数
+                switch(arguments.length){
+                    case 1:
+                        return parseInt(Math.random()*minNum+1,10);
+                        break;
+                    case 2:
+                        return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
+                        break;
+                    default:
+                        return 0;
+                        break;
+                }
+            },
+            isNum:function (n) {//确保参数为正整数
+                if(Math.floor(n) !== n || n <= 0){
+                    n=Math.floor(n);
+                    n=n<0?-n:(n===0||isNaN(n))?1:n;
+                    console.warn("stepNum或stepForward须为正整数。")
+                }
+                return n;
+            }
+        },
+        created:function () {
+            for(var i=0;i<Math.ceil(prize.length/this.prizesLen);i++){
+                (function () {//闭包取值，另外因为在地图上偶数行行走时实质上是倒着行走的，所以颠倒奇数行数组，根据提供的奖品画线路
+                    this.prizes[i]=prize.slice(i*this.prizesLen,i*this.prizesLen+this.prizesLen);
+                    if(i%2!==0)this.prizes[i]=this.prizes[i].reverse();
+                }.bind(this))(i);
+            };
+
+        },
+        mounted:function () {//挂载结束后获取每步的横向和竖向距离，并显示用户当前的位置
+            var elem=document.getElementById("map").firstChild.firstChild;
+            this.stepX=elem.clientWidth;
+            this.stepY=elem.clientHeight;
+            setTimeout(function(){//vue挂载结束后显示用户位置  实际项目中原本为后台返回用户当前的位置成功后，再调用 location(位置)并传参。
+                if(this.freshmarker===true){//刷新后从0位置开始
+                    this.stepNum=1;this.freshmarker=false;
+                }
+                else{
+                    this.stepNum+=1;
+                    // (Math.floor(Math.floor(this.stepNum/7))%2)===0?(oddrow=true):(oddrow=false);
+                };
+                //alert(this.stepNum);
+                //alert('偶数行？  '+oddrw);Math.ceil
+                this.location(this.stepNum);
+            }.bind(this),500);
+        }
+    });
+
+    //解决移动端音频无法paly()
+    /* document.addEventListener('DOMContentLoaded', function () {
+         function audioAutoPlay() {
+             var audio = document.getElementById('audio');
+             audio.load();
+             document.addEventListener("WeixinJSBridgeReady", function () {
+                 audio.load();
+             }, false);
+         }
+         audioAutoPlay();
+     });
+
+     document.addEventListener('touchstart', function () {
+         function audioAutoPlay() {
+             var audio = document.getElementById('audio');
+             if(audio!==null){
+                 audio.load();
+             }
+         }
+         audioAutoPlay();
+     });*/
+</script>
+<script type="text/javascript">
+    (function(win, lib) {
+        var doc = win.document;
+        var docEl = doc.documentElement;
+        var metaEl = doc.querySelector('meta[name="viewport"]');
+        var flexibleEl = doc.querySelector('meta[name="flexible"]');
+        var dpr = 0;
+        var scale = 0;
+        var tid;
+        var flexible = lib.flexible || (lib.flexible = {});
+
+        if (metaEl) {
+            console.warn('将根据已有的meta标签来设置缩放比例');
+            var match = metaEl.getAttribute('content').match(/initial\-scale=([\d\.]+)/);
+            if (match) {
+                scale = parseFloat(match[1]);
+                dpr = parseInt(1 / scale);
+            }
+        } else if (flexibleEl) {
+            var content = flexibleEl.getAttribute('content');
+            if (content) {
+                var initialDpr = content.match(/initial\-dpr=([\d\.]+)/);
+                var maximumDpr = content.match(/maximum\-dpr=([\d\.]+)/);
+                if (initialDpr) {
+                    dpr = parseFloat(initialDpr[1]);
+                    scale = parseFloat((1 / dpr).toFixed(2));
+                }
+                if (maximumDpr) {
+                    dpr = parseFloat(maximumDpr[1]);
+                    scale = parseFloat((1 / dpr).toFixed(2));
+                }
+            }
+        }
+
+        if (!dpr && !scale) {
+            var isAndroid = win.navigator.appVersion.match(/android/gi);
+            var isIPhone = win.navigator.appVersion.match(/iphone/gi);
+            var devicePixelRatio = win.devicePixelRatio;
+            if (isIPhone) {
+                // iOS下，对于2和3的屏，用2倍的方案，其余的用1倍方案
+                if (devicePixelRatio >= 3 && (!dpr || dpr >= 3)) {
+                    dpr = 3;
+                } else if (devicePixelRatio >= 2 && (!dpr || dpr >= 2)){
+                    dpr = 2;
+                } else {
+                    dpr = 1;
+                }
+            } else {
+                // 其他设备下，仍旧使用1倍的方案
+                dpr = 1;
+            }
+            scale = 1 / dpr;
+        }
+
+        docEl.setAttribute('data-dpr', dpr);
+        if (!metaEl) {
+            metaEl = doc.createElement('meta');
+            metaEl.setAttribute('name', 'viewport');
+            metaEl.setAttribute('content', 'initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=no');
+            if (docEl.firstElementChild) {
+                docEl.firstElementChild.appendChild(metaEl);
+            } else {
+                var wrap = doc.createElement('div');
+                wrap.appendChild(metaEl);
+                doc.write(wrap.innerHTML);
+            }
+        }
+
+        function refreshRem(){
+            var width = docEl.getBoundingClientRect().width;
+            if (width / dpr > 540) {
+                width = 540 * dpr;
+            }
+            var rem = width / 10;
+            docEl.style.fontSize = rem + 'px';
+            flexible.rem = win.rem = rem;
+        }
+
+        win.addEventListener('resize', function() {
+            clearTimeout(tid);
+            tid = setTimeout(refreshRem, 300);
+        }, false);
+        win.addEventListener('pageshow', function(e) {
+            if (e.persisted) {
+                clearTimeout(tid);
+                tid = setTimeout(refreshRem, 300);
+            }
+        }, false);
+
+        if (doc.readyState === 'complete') {
+            doc.body.style.fontSize = 12 * dpr + 'px';
+        } else {
+            doc.addEventListener('DOMContentLoaded', function(e) {
+                doc.body.style.fontSize = 12 * dpr + 'px';
+            }, false);
+        }
+
+
+        refreshRem();
+
+        flexible.dpr = win.dpr = dpr;
+        flexible.refreshRem = refreshRem;
+        flexible.rem2px = function(d) {
+            var val = parseFloat(d) * this.rem;
+            if (typeof d === 'string' && d.match(/rem$/)) {
+                val += 'px';
+            }
+            return val;
+        }
+        flexible.px2rem = function(d) {
+            var val = parseFloat(d) / this.rem;
+            if (typeof d === 'string' && d.match(/px$/)) {
+                val += 'rem';
+            }
+            return val;
+        }
+
+    })(window, window['lib'] || (window['lib'] = {}));
+</script>
+</body>
+</html>

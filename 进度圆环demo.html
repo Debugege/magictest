@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<style>
+#cavas{
+    width: 100%;
+}
+</style>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+        <title></title>
+    </head>
+
+    <body>
+        <canvas id = "cavas" height="232">  
+        </canvas>  
+    </body>
+    <script type="text/javascript">
+        
+        /**
+ * 绘制进度圆环
+ */
+toCanvas('cavas',100);
+
+function drowArc(ctx,percent){
+
+    //打底 圆环 绘制
+    ctx.lineWidth = 11;
+    ctx.beginPath(); 
+    var grd = ctx.createRadialGradient(circleValue.x, circleValue.y, 72, circleValue.x, circleValue.y, 93);
+    grd.addColorStop(0,"#e9eae9");
+    grd.addColorStop("0.8","#fefefe");
+    grd.addColorStop("1","#e9eae9");
+    ctx.strokeStyle = grd;
+    ctx.arc(circleValue.x, circleValue.y, circleValue.radius, circleValue.startAngle, circleValue.endAngle, circleValue.anticlockwise);
+    ctx.closePath(); 
+    ctx.stroke();
+
+    //展示进度圆环绘制
+    ctx.lineWidth = 11;
+    ctx.beginPath();
+    var linear = ctx.createLinearGradient(100,100,200,100);
+    linear.addColorStop(0,'#ffc26b');
+    linear.addColorStop(0.5,'#ff9a5f');
+    linear.addColorStop(1,'#ff8157');
+    ctx.strokeStyle = linear;
+    ctx.arc(circleValue.x, circleValue.y, circleValue.radius, circleValue.startAngle, circleValue.endAngle*percent, circleValue.anticlockwise);
+    ctx.stroke();
+
+    //进度起点圆角
+    ctx.beginPath();
+    ctx.fillStyle = '#ff8157';
+    ctx.arc(circleValue.x + circleValue.radius, circleValue.y - 1, 5.5, circleValue.startAngle, circleValue.endAngle, circleValue.anticlockwise);
+    ctx.closePath();
+    ctx.fill();
+
+    //终点圆角
+    ctx.lineWidth = 3.5;
+    ctx.beginPath();
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.shadowBlur = 6;
+    ctx.shadowColor = '#ff7854';
+    ctx.fillStyle = '#ff7854';
+    ctx.strokeStyle = '#fff';
+    //计算终点的坐标
+    var getX = circleValue.x + circleValue.radius * Math.cos(2 * percent * Math.PI),
+        getY = circleValue.y + circleValue.radius * Math.sin(2 * percent * Math.PI);
+    ctx.arc(getX , getY, 9, circleValue.startAngle, circleValue.endAngle, circleValue.anticlockwise);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+};
+
+ function toCanvas(id ,progress){
+                //canvas进度条
+                var canvas = document.getElementById(id),
+                ctx = canvas.getContext("2d"),
+                percent = progress,  //最终百分比
+                circleX = canvas.width / 2,  //中心x坐标
+                circleY = canvas.height / 2, // 中心y坐标
+                radius = 100, //圆环半径
+                lineWidth = 5,  //圆形线条的宽度
+                fontSize = 20; //字体大小
+                 //两端圆点
+                function smallcircle1(cx, cy, r) {
+                    ctx.beginPath();
+                    //ctx.moveTo(cx + r, cy);
+                    ctx.lineWidth = 1;
+                    ctx.fillStyle = '#06a8f3';
+                    ctx.arc(cx, cy, r,0,Math.PI*2);
+                    ctx.fill();
+                }
+
+                 //画底圆
+                 function circle(cx, cy, r) {
+                     ctx.beginPath();
+                     //ctx.moveTo(cx + r, cy);
+                     ctx.lineWidth = lineWidth;
+                     ctx.strokeStyle = '#eee';
+                     ctx.arc(cx, cy, r, 0, Math.PI*2);
+                     ctx.stroke();
+                 }
+                 //画弧线
+                 function sector(cx, cy, r, startAngle, endAngle, anti) {
+                     ctx.beginPath();
+                     //ctx.moveTo(cx, cy + r); // 从圆形底部开始画
+                     ctx.lineWidth = lineWidth;
+                     // 渐变色 - 可自定义
+                     var linGrad = ctx.createLinearGradient(
+                         circleX-radius-lineWidth, circleY, circleX+radius+lineWidth, circleY
+                     );
+                     linGrad.addColorStop(0.0, '#06a8f3');
+                     //linGrad.addColorStop(0.5, '#9bc4eb');
+                     linGrad.addColorStop(1.0, '#00f8bb');
+                     ctx.strokeStyle = linGrad;
+                     // 圆弧两端的样式
+                     ctx.lineCap = 'round';
+
+                     //圆弧
+                     ctx.arc(cx, cy, r,(Math.PI*1/2),(Math.PI*2/3) + endAngle/100 * (Math.PI*2),false);
+                     ctx.stroke();
+                 }
+
+                  //刷新
+                 function loading() {
+                     if (process >= percent) {
+                         clearInterval(circleLoading);
+                     }
+                      //清除canvas内容
+                     ctx.clearRect(0, 0, circleX * 2, circleY * 2);
+                    //中间的字
+                     ctx.font = fontSize + 'px April';
+                     ctx.textAlign = 'center';
+                     ctx.textBaseline = 'middle';
+                     ctx.fillStyle = '#999';
+                     ctx.fillText("综合"+''+Math.floor(parseFloat(process).toFixed(0)*0.6)/10, circleX, circleY);    
+            
+                     //圆形
+                     circle(circleX, circleY, radius);
+                     
+                      //圆弧
+                     sector(circleX, circleY, radius, Math.PI*2/3, process);
+                     //两端圆点
+                     smallcircle1(150+Math.cos(2*Math.PI/360*120)*100, 150+Math.sin(2*Math.PI/360*120)*100, 5);
+                     //smallcircle2(150+Math.cos(2*Math.PI/360*(120+process*3))*100, 150+Math.sin(2*Math.PI/360*(120+process*3))*100, 5);
+                     //控制结束时动画的速度
+                     if (process / percent > 0.90) {
+                         process += 0.30;
+                     } else if (process / percent > 0.80) {
+                         process += 0.55;
+                     } else if (process / percent > 0.70) {
+                         process += 0.75;
+                     } else {
+                         process += 1.0;
+                     }
+                 }
+                 var process = 0.0;  //进度
+                 var circleLoading = window.setInterval(function () {
+                     loading();
+                 }, 10);   
+            }
+    </script>>
+
+</html>
